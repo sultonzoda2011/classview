@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));

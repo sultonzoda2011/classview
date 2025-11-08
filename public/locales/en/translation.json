@@ -1,0 +1,119 @@
+{
+  "navigation": {
+    "streams": "Live Streams",
+    "back": "Back",
+    "welcome": "Welcome to"
+  },
+  "header": {
+    "themes": {
+      "light": "Light Mode",
+      "dark": "Dark Mode"
+    },
+    "language": {
+      "english": "English",
+      "tajik": "Tajik",
+      "russian": "Russian"
+    }
+  },
+  "overview": {
+    "title": "Overview",
+    "users": "Users",
+    "centers": "Centers",
+    "classrooms": "Classrooms"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "phone": "Phone",
+    "changePassword": "Change Password"
+  },
+  "common": {
+    "search": "Search",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "profile": "Profile",
+    "darkMode": "Dark Mode",
+    "actions": "Actions",
+    "edit": "Edit",
+    "manage": "Manage",
+    "noData": "No data found",
+    "addEmployee": "Add Employee",
+    "createUser": "Create User",
+    "searchPlaceholder": "Search..."
+  },
+  "pages": {
+    "notFound": {
+      "title": "404 - Page Not Found",
+      "description": "It looks like you've reached a wrong page. Check the URL or return to the main page",
+      "backToStreams": "Back to Streams"
+    },
+    "forbidden": {
+      "title": "403 - Access Forbidden",
+      "description": "You don't have permission to view this page. Please contact the administrator",
+      "backToLogin": "Back to Login"
+    },
+    "profile": {
+      "userNotFound": "User not found",
+      "back": "Back",
+      "info": {
+        "childName": "Child Name",
+        "classroom": "Classroom",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "center": "Center"
+      }
+    }
+  },
+  "login": {
+    "title": "Login to the System",
+    "subtitle": "Sign in to KavsarCamera",
+    "usernamePlaceholder": "Username or email",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Login",
+    "educationTagline": "Education • Students • Lessons",
+    "copyright": "© 2025 Korvoni Khunar LLC. All rights reserved."
+  },
+  "centers": {
+    "title": "Centers",
+    "name": "Name",
+    "address": "Address",
+    "createCenter": "Create Center",
+    "updateCenter": "Update Center",
+    "addCenter": "Add Center"
+  },
+  "classrooms": {
+    "title": "Classrooms",
+    "name": "Name",
+    "center": "Center",
+    "cameraUrl": "Camera URL",
+    "createClassroom": "Create Classroom",
+    "updateClassroom": "Update Classroom"
+  },
+  "users": {
+    "title": "Users",
+    "fullName": "Full Name",
+    "childName": "Child Name",
+    "role": "Role",
+    "createUser": "Create User",
+    "updateUser": "Update User",
+    "userDetails": "User Details"
+  },
+  "menuUser": {
+    "title": "Your Profile",
+    "viewEdit": "View and Edit"
+  },
+  "modals": {
+    "sendOtp": {
+      "title": "Get Confirmation Code",
+      "description": "Enter your phone number to receive an OTP.",
+      "phonePlaceholder": "+992 (___) ___-__-__",
+      "sendCode": "Send Code"
+    }
+  }
+}
