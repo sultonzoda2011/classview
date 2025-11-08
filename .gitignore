@@ -21,7 +21,6 @@ build/
 
 # Local env files
 .env
-.env.*
 
 # Editor directories and files
 .vscode/*
