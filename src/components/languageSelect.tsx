@@ -27,7 +27,7 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({ languages, selectedLang
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
 
   useEffect(() => {
     i18n.changeLanguage(selectedLang.code)

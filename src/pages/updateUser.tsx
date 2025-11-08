@@ -60,7 +60,7 @@ const UpdateUser = () => {
   }, [usersById, reset])
 
   const onSubmit = async (data: UpdateUserInput) => {
-    await dispatch(updateUser({ id: String(id), ...data }))
+    await dispatch(updateUser({ ...data, id : id || '' }))
     navigate('/users')
   }
 
