@@ -1,2 +1,2 @@
-export const API_URL = 'http://37.27.249.153:5990/api'
-export const STREAM_URL = 'http://37.27.249.153:5990/api/streams'
+export const API_URL = import.meta.env.VITE_API_URL
+export const STREAM_URL = import.meta.env.VITE_API_URL_STREAMS
