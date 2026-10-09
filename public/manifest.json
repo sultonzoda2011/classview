@@ -1,21 +1,16 @@
 {
-  "name": "KavsarCamera",
-  "short_name": "Kavsar",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4f46e5",
-  "description": "Панель управления камерами для образовательных центров",
-  "icons": [
-    {
-      "src": "/src/images/image.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/src/images/vector.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+	"name": "ClassView",
+	"short_name": "CV",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#4f46e5",
+	"description": "Панель управления камерами для образовательных центров",
+	"icons": [
+		{
+			"src": "/src/images/favicon.ico",
+			"sizes": "512x512",
+			"type":"image/png"
+		}
+	]
 }
