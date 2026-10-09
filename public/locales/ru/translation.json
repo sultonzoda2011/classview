@@ -1,119 +1,119 @@
 {
-  "navigation": {
-    "streams": "Трансляции",
-    "back": "Назад",
-    "welcome": "Добро пожаловать в"
-  },
-  "header": {
-    "themes": {
-      "light": "Светлая тема",
-      "dark": "Тёмная тема"
-    },
-    "language": {
-      "english": "Английский",
-      "tajik": "Таджикский",
-      "russian": "Русский"
-    }
-  },
-  "overview": {
-    "title": "Обзор",
-    "users": "Пользователи",
-    "centers": "Центры",
-    "classrooms": "Классы"
-  },
-  "auth": {
-    "login": "Войти",
-    "logout": "Выйти",
-    "username": "Имя пользователя",
-    "password": "Пароль",
-    "phone": "Телефон",
-    "changePassword": "Сменить пароль"
-  },
-  "common": {
-    "search": "Поиск",
-    "create": "Создать",
-    "update": "Обновить",
-    "delete": "Удалить",
-    "cancel": "Отмена",
-    "save": "Сохранить",
-    "profile": "Профиль",
-    "darkMode": "Тёмный режим",
-    "actions": "Действия",
-    "edit": "Редактировать",
-    "manage": "Управление",
-    "noData": "Данные не найдены",
-    "addEmployee": "Добавить сотрудника",
-    "createUser": "Создать пользователя",
-    "searchPlaceholder": "Поиск..."
-  },
-  "pages": {
-    "notFound": {
-      "title": "404 - Страница не найдена",
-      "description": "Похоже, вы попали не туда. Проверьте адрес или вернитесь на главную страницу",
-      "backToStreams": "Вернуться к трансляциям"
-    },
-    "forbidden": {
-      "title": "403 - Доступ запрещён",
-      "description": "У вас нет прав для просмотра этой страницы. Пожалуйста, обратитесь к администратору",
-      "backToLogin": "Вернуться к входу"
-    },
-    "profile": {
-      "userNotFound": "Пользователь не найден",
-      "back": "Назад",
-      "info": {
-        "childName": "Имя ребёнка",
-        "classroom": "Класс",
-        "startTime": "Время начала",
-        "endTime": "Время окончания",
-        "center": "Центр"
-      }
-    }
-  },
-  "login": {
-    "title": "Вход в систему",
-    "subtitle": "Войдите в KavsarCamera",
-    "usernamePlaceholder": "Логин или email",
-    "passwordPlaceholder": "Пароль",
-    "forgotPassword": "Забыли пароль?",
-    "loginButton": "Войти",
-    "educationTagline": "Образование • Студенты • Уроки",
-    "copyright": "© 2025 ООО «Корвони Хунар». Все права защищены."
-  },
-  "centers": {
-    "title": "Центры",
-    "name": "Название",
-    "address": "Адрес",
-    "createCenter": "Создать центр",
-    "updateCenter": "Обновить центр",
-    "addCenter": "Добавить центр"
-  },
-  "classrooms": {
-    "title": "Классы",
-    "name": "Название",
-    "center": "Центр",
-    "cameraUrl": "URL камеры",
-    "createClassroom": "Создать класс",
-    "updateClassroom": "Обновить класс"
-  },
-  "users": {
-    "title": "Пользователи",
-    "fullName": "Полное имя",
-    "childName": "Имя ребёнка",
-    "role": "Роль",
-    "createUser": "Создать пользователя",
-    "updateUser": "Обновить пользователя",
-    "userDetails": "Детали пользователя"
-  },
-  "menuUser": {
-    "title": "Ваш профиль",
-    "viewEdit": "Смотреть и редактировать"
-  },
-  "modals": {
-    "sendOtp": {
-      "title": "Получение кода подтверждения",
-      "description": "Введите номер телефона, чтобы получить OTP.",
-      "phonePlaceholder": "+992 (___) ___-__-__",
-      "sendCode": "Отправить код"
-    }
-  }
+	"navigation": {
+		"streams": "Трансляции",
+		"back": "Назад",
+		"welcome": "Добро пожаловать в"
+	},
+	"header": {
+		"themes": {
+			"light": "Светлая тема",
+			"dark": "Тёмная тема"
+		},
+		"language": {
+			"english": "Английский",
+			"tajik": "Таджикский",
+			"russian": "Русский"
+		}
+	},
+	"overview": {
+		"title": "Обзор",
+		"users": "Пользователи",
+		"centers": "Центры",
+		"classrooms": "Классы"
+	},
+	"auth": {
+		"login": "Войти",
+		"logout": "Выйти",
+		"username": "Имя пользователя",
+		"password": "Пароль",
+		"phone": "Телефон",
+		"changePassword": "Сменить пароль"
+	},
+	"common": {
+		"search": "Поиск",
+		"create": "Создать",
+		"update": "Обновить",
+		"delete": "Удалить",
+		"cancel": "Отмена",
+		"save": "Сохранить",
+		"profile": "Профиль",
+		"darkMode": "Тёмный режим",
+		"actions": "Действия",
+		"edit": "Редактировать",
+		"manage": "Управление",
+		"noData": "Данные не найдены",
+		"addEmployee": "Добавить сотрудника",
+		"createUser": "Создать пользователя",
+		"searchPlaceholder": "Поиск..."
+	},
+	"pages": {
+		"notFound": {
+			"title": "404 - Страница не найдена",
+			"description": "Похоже, вы попали не туда. Проверьте адрес или вернитесь на главную страницу",
+			"backToStreams": "Вернуться к трансляциям"
+		},
+		"forbidden": {
+			"title": "403 - Доступ запрещён",
+			"description": "У вас нет прав для просмотра этой страницы. Пожалуйста, обратитесь к администратору",
+			"backToLogin": "Вернуться к входу"
+		},
+		"profile": {
+			"userNotFound": "Пользователь не найден",
+			"back": "Назад",
+			"info": {
+				"childName": "Имя ребёнка",
+				"classroom": "Класс",
+				"startTime": "Время начала",
+				"endTime": "Время окончания",
+				"center": "Центр"
+			}
+		}
+	},
+	"login": {
+		"title": "Вход в систему",
+		"subtitle": "Войдите в ClassView",
+		"usernamePlaceholder": "Логин или email",
+		"passwordPlaceholder": "Пароль",
+		"forgotPassword": "Забыли пароль?",
+		"loginButton": "Войти",
+		"educationTagline": "Образование • Студенты • Уроки",
+		"copyright": "© 2025 ООО «Корвони Хунар». Все права защищены."
+	},
+	"centers": {
+		"title": "Центры",
+		"name": "Название",
+		"address": "Адрес",
+		"createCenter": "Создать центр",
+		"updateCenter": "Обновить центр",
+		"addCenter": "Добавить центр"
+	},
+	"classrooms": {
+		"title": "Классы",
+		"name": "Название",
+		"center": "Центр",
+		"cameraUrl": "URL камеры",
+		"createClassroom": "Создать класс",
+		"updateClassroom": "Обновить класс"
+	},
+	"users": {
+		"title": "Пользователи",
+		"fullName": "Полное имя",
+		"childName": "Имя ребёнка",
+		"role": "Роль",
+		"createUser": "Создать пользователя",
+		"updateUser": "Обновить пользователя",
+		"userDetails": "Детали пользователя"
+	},
+	"menuUser": {
+		"title": "Ваш профиль",
+		"viewEdit": "Смотреть и редактировать"
+	},
+	"modals": {
+		"sendOtp": {
+			"title": "Получение кода подтверждения",
+			"description": "Введите номер телефона, чтобы получить OTP.",
+			"phonePlaceholder": "+992 (___) ___-__-__",
+			"sendCode": "Отправить код"
+		}
+	}
 }

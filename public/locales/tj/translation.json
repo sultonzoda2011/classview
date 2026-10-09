@@ -1,119 +1,119 @@
 {
-  "navigation": {
-    "streams": "Стримҳо",
-    "back": "Баргашт",
-    "welcome": "Хуш омадед ба"
-  },
-  "header": {
-    "themes": {
-      "light": "Ҳолати равшан",
-      "dark": "Ҳолати торик"
-    },
-    "language": {
-      "english": "Англисӣ",
-      "tajik": "Тоҷикӣ",
-      "russian": "Русӣ"
-    }
-  },
-  "overview": {
-    "title": "Шарҳи умумӣ",
-    "users": "Корбарон",
-    "centers": "Марказҳо",
-    "classrooms": "Синфхонаҳо"
-  },
-  "auth": {
-    "login": "Воридшавӣ",
-    "logout": "Баромадан",
-    "username": "Номи корбар",
-    "password": "Рамз",
-    "phone": "Телефон",
-    "changePassword": "Тағйир додани рамз"
-  },
-  "common": {
-    "search": "Ҷустуҷӯ",
-    "create": "Сохтан",
-    "update": "Навсозӣ",
-    "delete": "Нест кардан",
-    "cancel": "Бекор кардан",
-    "save": "Нигоҳ доштан",
-    "profile": "Профил",
-    "darkMode": "Ҳолати торик",
-    "actions": "Амалҳо",
-    "edit": "Таҳрир",
-    "manage": "Идоракунӣ",
-    "noData": "Маълумот ёфт нашуд",
-    "addEmployee": "Иловаи корманд",
-    "createUser": "Сохтани корбар",
-    "searchPlaceholder": "Ҷустуҷӯ..."
-  },
-  "pages": {
-    "notFound": {
-      "title": "404 - Саҳифа ёфт нашуд",
-      "description": "Шумо ба ҷои нодуруст омадед. Лутфан URL-ро тафтиш кунед ё ба саҳифаи асосӣ баргардед",
-      "backToStreams": "Баргашт ба стримҳо"
-    },
-    "forbidden": {
-      "title": "403 - Дастрасӣ манъ аст",
-      "description": "Шумо ҳуқуқ надоред ин саҳифаро бинед. Лутфан ба маъмур муроҷиат кунед",
-      "backToLogin": "Баргашт ба воридшавӣ"
-    },
-    "profile": {
-      "userNotFound": "Корбар ёфт нашуд",
-      "back": "Баргашт",
-      "info": {
-        "childName": "Номи кӯдак",
-        "classroom": "Синфхона",
-        "startTime": "Вақти оғоз",
-        "endTime": "Вақти анҷом",
-        "center": "Марказ"
-      }
-    }
-  },
-  "login": {
-    "title": "Воридшавӣ ба система",
-    "subtitle": "Ба KavsarCamera ворид шавед",
-    "usernamePlaceholder": "Логин ё email",
-    "passwordPlaceholder": "Рамз",
-    "forgotPassword": "Рамзро фаромӯш кардед?",
-    "loginButton": "Воридшавӣ",
-    "educationTagline": "Маориф • Донишҷӯён • Дарсҳо",
-    "copyright": "© 2025 ҶДММ «Корвони Хунар». Ҳама ҳуқуқҳо ҳифз шудаанд."
-  },
-  "centers": {
-    "title": "Марказҳо",
-    "name": "Ном",
-    "address": "Суроға",
-    "createCenter": "Сохтани марказ",
-    "updateCenter": "Навсозии марказ",
-    "addCenter": "Иловаи марказ"
-  },
-  "classrooms": {
-    "title": "Синфхонаҳо",
-    "name": "Ном",
-    "center": "Марказ",
-    "cameraUrl": "URL-и камера",
-    "createClassroom": "Сохтани синф",
-    "updateClassroom": "Навсозии синф"
-  },
-  "users": {
-    "title": "Корбарон",
-    "fullName": "Номи пурра",
-    "childName": "Номи кӯдак",
-    "role": "Нақш",
-    "createUser": "Сохтани корбар",
-    "updateUser": "Навсозии корбар",
-    "userDetails": "Маълумоти корбар"
-  },
-  "menuUser": {
-    "title": "Профили шумо",
-    "viewEdit": "Нигоҳ доштан ва таҳрир кардан"
-  },
-  "modals": {
-    "sendOtp": {
-      "title": "Гирифтани коди тасдиқ",
-      "description": "Рақами телефони худро ворид кунед, то OTP гиред.",
-      "phonePlaceholder": "+992 (___) ___-__-__",
-      "sendCode": "Фиристодани код"
-    }
-  }
+	"navigation": {
+		"streams": "Стримҳо",
+		"back": "Баргашт",
+		"welcome": "Хуш омадед ба"
+	},
+	"header": {
+		"themes": {
+			"light": "Ҳолати равшан",
+			"dark": "Ҳолати торик"
+		},
+		"language": {
+			"english": "Англисӣ",
+			"tajik": "Тоҷикӣ",
+			"russian": "Русӣ"
+		}
+	},
+	"overview": {
+		"title": "Шарҳи умумӣ",
+		"users": "Корбарон",
+		"centers": "Марказҳо",
+		"classrooms": "Синфхонаҳо"
+	},
+	"auth": {
+		"login": "Воридшавӣ",
+		"logout": "Баромадан",
+		"username": "Номи корбар",
+		"password": "Рамз",
+		"phone": "Телефон",
+		"changePassword": "Тағйир додани рамз"
+	},
+	"common": {
+		"search": "Ҷустуҷӯ",
+		"create": "Сохтан",
+		"update": "Навсозӣ",
+		"delete": "Нест кардан",
+		"cancel": "Бекор кардан",
+		"save": "Нигоҳ доштан",
+		"profile": "Профил",
+		"darkMode": "Ҳолати торик",
+		"actions": "Амалҳо",
+		"edit": "Таҳрир",
+		"manage": "Идоракунӣ",
+		"noData": "Маълумот ёфт нашуд",
+		"addEmployee": "Иловаи корманд",
+		"createUser": "Сохтани корбар",
+		"searchPlaceholder": "Ҷустуҷӯ..."
+	},
+	"pages": {
+		"notFound": {
+			"title": "404 - Саҳифа ёфт нашуд",
+			"description": "Шумо ба ҷои нодуруст омадед. Лутфан URL-ро тафтиш кунед ё ба саҳифаи асосӣ баргардед",
+			"backToStreams": "Баргашт ба стримҳо"
+		},
+		"forbidden": {
+			"title": "403 - Дастрасӣ манъ аст",
+			"description": "Шумо ҳуқуқ надоред ин саҳифаро бинед. Лутфан ба маъмур муроҷиат кунед",
+			"backToLogin": "Баргашт ба воридшавӣ"
+		},
+		"profile": {
+			"userNotFound": "Корбар ёфт нашуд",
+			"back": "Баргашт",
+			"info": {
+				"childName": "Номи кӯдак",
+				"classroom": "Синфхона",
+				"startTime": "Вақти оғоз",
+				"endTime": "Вақти анҷом",
+				"center": "Марказ"
+			}
+		}
+	},
+	"login": {
+		"title": "Воридшавӣ ба система",
+		"subtitle": "Ба ClassView ворид шавед",
+		"usernamePlaceholder": "Логин ё email",
+		"passwordPlaceholder": "Рамз",
+		"forgotPassword": "Рамзро фаромӯш кардед?",
+		"loginButton": "Воридшавӣ",
+		"educationTagline": "Маориф • Донишҷӯён • Дарсҳо",
+		"copyright": "© 2025 ҶДММ «Корвони Хунар». Ҳама ҳуқуқҳо ҳифз шудаанд."
+	},
+	"centers": {
+		"title": "Марказҳо",
+		"name": "Ном",
+		"address": "Суроға",
+		"createCenter": "Сохтани марказ",
+		"updateCenter": "Навсозии марказ",
+		"addCenter": "Иловаи марказ"
+	},
+	"classrooms": {
+		"title": "Синфхонаҳо",
+		"name": "Ном",
+		"center": "Марказ",
+		"cameraUrl": "URL-и камера",
+		"createClassroom": "Сохтани синф",
+		"updateClassroom": "Навсозии синф"
+	},
+	"users": {
+		"title": "Корбарон",
+		"fullName": "Номи пурра",
+		"childName": "Номи кӯдак",
+		"role": "Нақш",
+		"createUser": "Сохтани корбар",
+		"updateUser": "Навсозии корбар",
+		"userDetails": "Маълумоти корбар"
+	},
+	"menuUser": {
+		"title": "Профили шумо",
+		"viewEdit": "Нигоҳ доштан ва таҳрир кардан"
+	},
+	"modals": {
+		"sendOtp": {
+			"title": "Гирифтани коди тасдиқ",
+			"description": "Рақами телефони худро ворид кунед, то OTP гиред.",
+			"phonePlaceholder": "+992 (___) ___-__-__",
+			"sendCode": "Фиристодани код"
+		}
+	}
 }
