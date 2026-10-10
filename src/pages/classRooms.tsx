@@ -5,6 +5,7 @@ import ClassroomCard from '../components/classroom-card'
 import ClassroomFormDialog from '../components/modal/classroom-form-dialog'
 import SearchInput from '../components/search-input'
 import { Button } from '../components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { EmptyState } from '../components/ui/empty-state'
 import { Skeleton } from '../components/ui/skeleton'
 import { useAuth } from '../hooks/useAuth'
@@ -26,23 +27,27 @@ const ClassRooms = () => {
   const fixedCenterId = info?.role === 'Admin' ? Number(info.centerId) : undefined
 
   return (
-    <section>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
-          {t('common.manage')} {t('classrooms.title')}
-        </h1>
-        <Button
-          onClick={() => {
-            setEditing(null)
-            setDialogOpen(true)
-          }}
-        >
-          <Plus className="h-4 w-4" />
-          {t('classrooms.createClassroom')}
-        </Button>
-      </div>
-
-      <SearchInput value={search} onChange={setSearch} />
+    <section className="flex flex-col gap-6">
+      <Card>
+        <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <CardTitle>{t('common.manage')} {t('classrooms.title')}</CardTitle>
+            <CardDescription>{t('classrooms.title')}</CardDescription>
+          </div>
+          <Button
+            onClick={() => {
+              setEditing(null)
+              setDialogOpen(true)
+            }}
+          >
+            <Plus data-icon="inline-start" />
+            {t('classrooms.createClassroom')}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <SearchInput value={search} onChange={setSearch} />
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

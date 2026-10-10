@@ -29,7 +29,7 @@ const Sidebar = ({ open = false, onClose }: SidebarProps) => {
 
   return (
     <>
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-card md:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-background shadow-sm md:flex">
         <div className="flex items-center gap-3 border-b px-6 py-6">
           <img src="/src/images/logo.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
           <div>
