@@ -20,7 +20,7 @@ Alternatively, use **Actions → Capacitor Android → Run workflow** and enter 
 3. Download the `classview-android-debug-apk` artifact.
 4. Extract the archive and install `app-debug.apk` on an Android test device. Android may ask you to allow installation from that source.
 
-For a tagged run, the APK is also attached to the GitHub Release. It is a debug APK for testing and manual installation, not a signed Play Store release.
+No Google Play account or store upload is needed. Install the downloaded APK directly on your Android phone. It is a debug APK for personal testing and manual installation.
 
 ## Local Android development
 
