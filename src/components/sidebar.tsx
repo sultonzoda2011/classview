@@ -36,7 +36,7 @@ const Sidebar = () => {
 		<>
 			<aside className="hidden md:flex bg-white dark:bg-gray-900 fixed top-0 left-0 w-64 h-screen flex-col justify-between shadow-md z-40 transition-colors duration-300">
 				<img
-					src="/src/images/logo.png"
+					src="/logo.png"
 					className="w-[70%] m-auto h-auto mb-2"
 					alt=""
 				/>

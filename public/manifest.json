@@ -8,7 +8,7 @@
 	"description": "Панель управления камерами для образовательных центров",
 	"icons": [
 		{
-			"src": "/src/images/favicon.ico",
+			"src": "/favicon.ico",
 			"sizes": "512x512",
 			"type":"image/png"
 		}
