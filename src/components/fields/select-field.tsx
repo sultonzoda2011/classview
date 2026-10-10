@@ -27,7 +27,7 @@ export function SelectField<T extends FieldValues>({ control, name, label, place
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder={placeholder} />
+                <SelectValue placeholder={placeholder ?? 'Choose...'} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

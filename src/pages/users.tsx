@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import SearchInput from '../components/search-input'
 import { Button } from '../components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { ConfirmDialog } from '../components/ui/confirm-dialog'
 import { EmptyState } from '../components/ui/empty-state'
 import { Skeleton } from '../components/ui/skeleton'
@@ -43,32 +44,28 @@ const Users = () => {
   }
 
   return (
-    <section>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
-          {t('common.manage')} {t('users.title')}
-        </h1>
-        <div className="flex flex-wrap gap-2">
-          {info?.role === 'SuperAdmin' && (
-            <Button asChild variant="secondary">
-              <Link to="/users/create-employee">
-                <Plus className="h-4 w-4" />
-                {t('common.addEmployee')}
-              </Link>
-            </Button>
-          )}
-          <Button asChild>
-            <Link to="/users/create">
-              <Plus className="h-4 w-4" />
-              {t('common.createUser')}
-            </Link>
-          </Button>
-        </div>
-      </div>
+    <section className="flex flex-col gap-6">
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <CardTitle>{t('common.manage')} {t('users.title')}</CardTitle>
+            <CardDescription>{t('users.title')}</CardDescription>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {info?.role === 'SuperAdmin' && (
+              <Button asChild variant="secondary"><Link to="/users/create-employee"><Plus data-icon="inline-start" />{t('common.addEmployee')}</Link></Button>
+            )}
+            <Button asChild><Link to="/users/create"><Plus data-icon="inline-start" />{t('common.createUser')}</Link></Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <SearchInput value={search} onChange={setSearch} />
+        </CardContent>
+      </Card>
 
-      <SearchInput value={search} onChange={setSearch} />
-
-      {isLoading ? (
+      <Card>
+        <CardContent className="pt-5">
+          {isLoading ? (
         <Skeleton className="h-96 rounded-xl" />
       ) : filtered.length > 0 ? (
         <Table>
@@ -113,9 +110,11 @@ const Users = () => {
             ))}
           </TableBody>
         </Table>
-      ) : (
-        <EmptyState icon={UsersIcon} title={t('common.noData')} />
-      )}
+          ) : (
+            <EmptyState icon={UsersIcon} title={t('common.noData')} />
+          )}
+        </CardContent>
+      </Card>
 
       <ConfirmDialog
         open={!!toDelete}
