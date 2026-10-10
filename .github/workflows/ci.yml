@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc -b --noEmit
+      - name: i18n coverage (en/ru/tj in sync)
+        run: npm run check-i18n
+      - name: Unit tests
+        run: npm test
+      - run: npm run build
+        env:
+          VITE_API_URL: http://localhost:5990/api
+          VITE_API_URL_STREAMS: http://localhost:5990
+
+  # Прогоняется, только когда в репозитории настроен секрет E2E_SUPERADMIN_PASSWORD
+  # (т.е. когда рядом поднят тестовый backend с seed-супер-админом). См. e2e/README.md.
+  e2e:
+    needs: lint-test-build
+    runs-on: ubuntu-latest
+    if: ${{ vars.E2E_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Run e2e
+        run: npm run e2e
+        env:
+          E2E_BASE_URL: ${{ vars.E2E_BASE_URL }}
+          E2E_SUPERADMIN_EMAIL: ${{ vars.E2E_SUPERADMIN_EMAIL }}
+          E2E_SUPERADMIN_PASSWORD: ${{ secrets.E2E_SUPERADMIN_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/

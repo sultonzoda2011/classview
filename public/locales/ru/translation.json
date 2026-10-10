@@ -27,6 +27,7 @@
 		"username": "Имя пользователя",
 		"password": "Пароль",
 		"phone": "Телефон",
+		"email": "Email",
 		"changePassword": "Сменить пароль"
 	},
 	"common": {
@@ -72,7 +73,7 @@
 	"login": {
 		"title": "Вход в систему",
 		"subtitle": "Войдите в ClassView",
-		"usernamePlaceholder": "Логин или email",
+		"usernamePlaceholder": "Email, телефон или логин",
 		"passwordPlaceholder": "Пароль",
 		"forgotPassword": "Забыли пароль?",
 		"loginButton": "Войти",
@@ -102,7 +103,14 @@
 		"role": "Роль",
 		"createUser": "Создать пользователя",
 		"updateUser": "Обновить пользователя",
-		"userDetails": "Детали пользователя"
+		"userDetails": "Детали пользователя",
+		"connect": "Доступ к камере",
+		"connectDescription": "Если выключено, родитель не сможет открыть трансляцию",
+		"roles": {
+			"User": "Родитель",
+			"Admin": "Администратор",
+			"SuperAdmin": "Суперадминистратор"
+		}
 	},
 	"menuUser": {
 		"title": "Ваш профиль",
@@ -110,10 +118,73 @@
 	},
 	"modals": {
 		"sendOtp": {
-			"title": "Получение кода подтверждения",
-			"description": "Введите номер телефона, чтобы получить OTP.",
-			"phonePlaceholder": "+992 (___) ___-__-__",
+			"title": "Восстановление пароля",
+			"description": "Введите email, чтобы получить код подтверждения.",
+			"emailPlaceholder": "you@example.com",
 			"sendCode": "Отправить код"
+		},
+		"verifyOtp": {
+			"title": "Введите код",
+			"description": "Мы отправили 6-значный код на {{email}}",
+			"expiresIn": "Код действует ещё {{time}}",
+			"expired": "Код истёк, запросите новый",
+			"resend": "Отправить код повторно",
+			"verify": "Подтвердить"
+		},
+		"resetPassword": {
+			"title": "Новый пароль",
+			"description": "Придумайте новый пароль для входа",
+			"newPassword": "Новый пароль",
+			"confirmPassword": "Повторите пароль",
+			"submit": "Сохранить пароль"
+		},
+		"changePassword": {
+			"required": "Это временный пароль. Задайте новый, чтобы продолжить.",
+			"current": "Текущий пароль",
+			"new": "Новый пароль"
 		}
+	},
+	"confirm": {
+		"deleteCenterTitle": "Удалить центр?",
+		"deleteCenterDescription": "Центр «{{name}}» и все связанные с ним классы будут удалены без возможности восстановления.",
+		"deleteClassroomTitle": "Удалить класс?",
+		"deleteClassroomDescription": "Класс «{{name}}» будет удалён без возможности восстановления.",
+		"deleteUserTitle": "Удалить пользователя?",
+		"deleteUserDescription": "Пользователь «{{name}}» будет удалён без возможности восстановления."
+	},
+	"toasts": {
+		"centerCreated": "Центр создан",
+		"centerUpdated": "Центр обновлён",
+		"centerDeleted": "Центр удалён",
+		"classroomCreated": "Класс создан",
+		"classroomUpdated": "Класс обновлён",
+		"classroomDeleted": "Класс удалён",
+		"userUpdated": "Данные пользователя обновлены",
+		"userDeleted": "Пользователь удалён",
+		"userCreatedMailSent": "Пользователь создан, данные для входа отправлены на email",
+		"userCreatedMailFailed": "Пользователь создан, но письмо не отправлено — сообщите пароль вручную или сбросьте его",
+		"employeeCreatedMailSent": "Сотрудник создан, данные для входа отправлены на email",
+		"employeeCreatedMailFailed": "Сотрудник создан, но письмо не отправлено — сообщите пароль вручную или сбросьте его",
+		"passwordChanged": "Пароль изменён",
+		"passwordReset": "Пароль успешно изменён, теперь можно войти"
+	},
+	"validation": {
+		"required": "Обязательное поле",
+		"tooLong": "Слишком длинное значение",
+		"email": "Некорректный email",
+		"phone": "Некорректный номер телефона",
+		"time": "Формат времени: ЧЧ:ММ",
+		"cameraUrl": "Введите корректный URL камеры (rtsp:// или http://)",
+		"selectCenter": "Выберите центр",
+		"selectClassroom": "Выберите класс",
+		"passwordMin": "Минимум 6 символов",
+		"passwordsMatch": "Пароли не совпадают",
+		"otpLength": "Код состоит из 6 цифр"
+	},
+	"streams": {
+		"unsupportedBrowser": "Браузер не поддерживает воспроизведение потока",
+		"loadError": "Не удалось загрузить видеопоток",
+		"timeExpired": "Время просмотра истекло",
+		"timeExpiringSoon": "Время просмотра скоро закончится"
 	}
 }

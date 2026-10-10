@@ -6,4 +6,6 @@ export interface CustomJwtPayload extends JwtPayload {
   nameid: string
   unique_name: string
   role: 'Admin' | 'SuperAdmin' | 'User'
+  /** true, пока пользователь не сменил временный пароль */
+  mustChangePw?: boolean
 }

@@ -1,4 +1,5 @@
-import { z } from "zod"
+import type { TFunction } from 'i18next'
+import { z } from 'zod'
 
 export interface ICenter {
   id: number
@@ -6,31 +7,10 @@ export interface ICenter {
   address: string
 }
 
-export interface ICenterState {
-  centers: ICenter[]
-}
+export const centerSchema = (t: TFunction) =>
+  z.object({
+    name: z.string().trim().min(1, t('validation.required')).max(200, t('validation.tooLong')),
+    address: z.string().trim().min(1, t('validation.required')).max(300, t('validation.tooLong')),
+  })
 
-export interface IUpdateCenter {
-  name: string
-  address: string
-  id: number
-}
-
-export interface ICreateCenter {
-  name: string
-  address: string
-}
-
-export const createCenterSchema = z.object({
-  name: z.string().min(1, "Название обязательно"),
-  address: z.string().min(1, "Адрес обязателен"),
-})
-
-export const updateCenterSchema = z.object({
-  id: z.number().int().positive("Некорректный ID"),
-  name: z.string().min(1, "Название обязательно"),
-  address: z.string().min(1, "Адрес обязателен"),
-})
-
-export type CreateCenterInput = z.infer<typeof createCenterSchema>
-export type UpdateCenterInput = z.infer<typeof updateCenterSchema>
+export type CenterFormInput = z.infer<ReturnType<typeof centerSchema>>

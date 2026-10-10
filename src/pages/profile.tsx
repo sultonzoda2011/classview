@@ -1,122 +1,68 @@
-import Cookies from 'js-cookie'
-import { jwtDecode } from 'jwt-decode'
-import { Clock, Layers, Lock, Phone, User } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { Clock, GraduationCap, Lock, Mail, Phone, User } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
-import { getClassrooms } from '../api/classRoomApi'
-import { getUserById } from '../api/usersApi'
-import ChangePasswordModal from '../components/modal/changePasswordModal'
-import type { AppDispatch, RootState } from '../store/store'
-import type { CustomJwtPayload } from '../types/jwt'
+import { Avatar } from '../components/avatar'
+import ChangePasswordDialog from '../components/modal/change-password-dialog'
+import { Button } from '../components/ui/button'
+import { Card, CardContent } from '../components/ui/card'
+import { Skeleton } from '../components/ui/skeleton'
+import { useAuth } from '../hooks/useAuth'
+import { useGetClassRoomsQuery } from '../store/classRoomsApi'
+import { useGetUserByIdQuery } from '../store/usersApi'
 
 const Profile = () => {
-  const token = Cookies.get('token')
-  const info = useMemo(() => (token ? jwtDecode<CustomJwtPayload>(token) : null), [token])
   const { t } = useTranslation()
+  const { info, mustChangePassword } = useAuth()
+  const { data: user, isLoading } = useGetUserByIdQuery(info?.nameid ?? '', { skip: !info?.nameid })
+  const { data: classRooms = [] } = useGetClassRoomsQuery()
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false)
 
-  const dispatch: AppDispatch = useDispatch()
-  const { usersById } = useSelector((state: RootState) => state.users)
-  const { classrooms } = useSelector((state: RootState) => state.classRoom)
+  if (isLoading || !user) return <Skeleton className="h-96 max-w-4xl mx-auto rounded-2xl" />
 
-  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
+  const classroom = classRooms.find((c) => c.id === user.classRoomId)
 
-  useEffect(() => {
-    if (info?.nameid) dispatch(getUserById(info.nameid))
-    dispatch(getClassrooms())
-  }, [dispatch, info?.nameid])
-
-  if (!usersById) {
-    return (
-      <div className="flex justify-center items-center h-screen text-gray-500 dark:text-gray-400">
-        {t('pages.profile.userNotFound')}
-      </div>
-    )
-  }
-
-  const { fullName, childName, phoneNumber, startTime, endTime, classRoomId } = usersById
-  const classroom = classrooms.find((cl) => cl.id === classRoomId)
+  const fields = [
+    { label: t('pages.profile.info.childName'), value: user.childName, icon: User },
+    { label: t('auth.phone'), value: user.phoneNumber, icon: Phone },
+    { label: t('auth.email'), value: user.email, icon: Mail },
+    { label: t('pages.profile.info.startTime'), value: `${user.startTime ?? '—'} — ${user.endTime ?? '—'}`, icon: Clock },
+    { label: t('pages.profile.info.classroom'), value: classroom?.name ?? t('common.noData'), icon: GraduationCap },
+  ]
 
   return (
-    <section className="min-h-screen p-6 sm:p-10 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 sm:p-10 space-y-8">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <div className="relative">
-            <span className="w-24 h-24 flex items-center justify-center text-3xl font-semibold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-200">
-              {fullName.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <div className="text-center sm:text-left space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-100">
-              {fullName}
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 sm:text-lg">{t('users.role')}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <User className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-gray-400 dark:text-gray-300">
-                  {t('pages.profile.info.childName')}
-                </p>
-                <p className="text-lg font-medium text-gray-800 dark:text-gray-100">{childName}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-gray-400 dark:text-gray-300">{t('auth.phone')}</p>
-                <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
-                  {phoneNumber}
-                </p>
-              </div>
+    <section className="max-w-4xl mx-auto">
+      <Card>
+        <CardContent className="pt-8 space-y-8">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <Avatar name={user.fullName} size="lg" />
+            <div className="text-center sm:text-left">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">{user.fullName}</h2>
+              <p className="text-gray-500 dark:text-gray-400">{t(`users.roles.${user.role}`)}</p>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-gray-400 dark:text-gray-300">
-                  {t('pages.profile.info.startTime')}
-                </p>
-                <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
-                  {startTime} — {endTime}
-                </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {fields.map(({ label, value, icon: Icon }) => (
+              <div key={label} className="flex items-center gap-3">
+                <Icon className="h-5 w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-gray-400 dark:text-gray-500">{label}</p>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">{value}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Layers className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-gray-400 dark:text-gray-300">
-                  {t('pages.profile.info.classroom')}
-                </p>
-                <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
-                  {classroom ? classroom.name : t('common.noData')}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
 
-        <div className="flex justify-end">
-          <button
-            onClick={() => setChangePasswordModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-black text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white transition-colors shadow-md"
-          >
-            <Lock className="w-5 h-5" />
-            {t('auth.changePassword')}
-          </button>
-        </div>
-      </div>
+          <div className="flex justify-end">
+            <Button onClick={() => setChangePasswordOpen(true)}>
+              <Lock className="h-4 w-4" />
+              {t('auth.changePassword')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-      <ChangePasswordModal
-        changePasswordModalOpen={changePasswordModalOpen}
-        setChangePasswordModalOpen={setChangePasswordModalOpen}
-      />
+      <ChangePasswordDialog open={changePasswordOpen || mustChangePassword} onOpenChange={setChangePasswordOpen} required={mustChangePassword} />
     </section>
   )
 }

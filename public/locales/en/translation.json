@@ -27,6 +27,7 @@
 		"username": "Username",
 		"password": "Password",
 		"phone": "Phone",
+		"email": "Email",
 		"changePassword": "Change Password"
 	},
 	"common": {
@@ -72,7 +73,7 @@
 	"login": {
 		"title": "Login to the System",
 		"subtitle": "Sign in to ClassView",
-		"usernamePlaceholder": "Username or email",
+		"usernamePlaceholder": "Email, phone, or username",
 		"passwordPlaceholder": "Password",
 		"forgotPassword": "Forgot password?",
 		"loginButton": "Login",
@@ -102,7 +103,14 @@
 		"role": "Role",
 		"createUser": "Create User",
 		"updateUser": "Update User",
-		"userDetails": "User Details"
+		"userDetails": "User Details",
+		"connect": "Camera Access",
+		"connectDescription": "If off, the parent won't be able to open the stream",
+		"roles": {
+			"User": "Parent",
+			"Admin": "Administrator",
+			"SuperAdmin": "Super Administrator"
+		}
 	},
 	"menuUser": {
 		"title": "Your Profile",
@@ -110,10 +118,73 @@
 	},
 	"modals": {
 		"sendOtp": {
-			"title": "Get Confirmation Code",
-			"description": "Enter your phone number to receive an OTP.",
-			"phonePlaceholder": "+992 (___) ___-__-__",
+			"title": "Password Recovery",
+			"description": "Enter your email to receive a confirmation code.",
+			"emailPlaceholder": "you@example.com",
 			"sendCode": "Send Code"
+		},
+		"verifyOtp": {
+			"title": "Enter the Code",
+			"description": "We sent a 6-digit code to {{email}}",
+			"expiresIn": "Code valid for {{time}}",
+			"expired": "Code expired, request a new one",
+			"resend": "Resend Code",
+			"verify": "Verify"
+		},
+		"resetPassword": {
+			"title": "New Password",
+			"description": "Choose a new password to sign in with",
+			"newPassword": "New Password",
+			"confirmPassword": "Confirm Password",
+			"submit": "Save Password"
+		},
+		"changePassword": {
+			"required": "This is a temporary password. Set a new one to continue.",
+			"current": "Current Password",
+			"new": "New Password"
 		}
+	},
+	"confirm": {
+		"deleteCenterTitle": "Delete center?",
+		"deleteCenterDescription": "\"{{name}}\" and all its classrooms will be permanently deleted.",
+		"deleteClassroomTitle": "Delete classroom?",
+		"deleteClassroomDescription": "\"{{name}}\" will be permanently deleted.",
+		"deleteUserTitle": "Delete user?",
+		"deleteUserDescription": "\"{{name}}\" will be permanently deleted."
+	},
+	"toasts": {
+		"centerCreated": "Center created",
+		"centerUpdated": "Center updated",
+		"centerDeleted": "Center deleted",
+		"classroomCreated": "Classroom created",
+		"classroomUpdated": "Classroom updated",
+		"classroomDeleted": "Classroom deleted",
+		"userUpdated": "User updated",
+		"userDeleted": "User deleted",
+		"userCreatedMailSent": "User created, sign-in details were emailed",
+		"userCreatedMailFailed": "User created, but the email failed — share the password manually or reset it",
+		"employeeCreatedMailSent": "Employee created, sign-in details were emailed",
+		"employeeCreatedMailFailed": "Employee created, but the email failed — share the password manually or reset it",
+		"passwordChanged": "Password changed",
+		"passwordReset": "Password changed successfully, you can now sign in"
+	},
+	"validation": {
+		"required": "Required field",
+		"tooLong": "Value is too long",
+		"email": "Invalid email",
+		"phone": "Invalid phone number",
+		"time": "Time format: HH:mm",
+		"cameraUrl": "Enter a valid camera URL (rtsp:// or http://)",
+		"selectCenter": "Select a center",
+		"selectClassroom": "Select a classroom",
+		"passwordMin": "At least 6 characters",
+		"passwordsMatch": "Passwords don't match",
+		"otpLength": "Code must be 6 digits"
+	},
+	"streams": {
+		"unsupportedBrowser": "This browser can't play the stream",
+		"loadError": "Failed to load the video stream",
+		"timeExpired": "Viewing time has ended",
+		"timeExpiringSoon": "Viewing time is about to end"
 	}
 }
