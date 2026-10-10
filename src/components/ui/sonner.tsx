@@ -7,6 +7,7 @@ const Toaster = ({ ...props }: ToasterProps) => (
     className="toaster group"
     position="top-right"
     richColors
+    closeButton
     toastOptions={{
       classNames: {
         toast: 'group toast group-[.toaster]:rounded-xl group-[.toaster]:shadow-lg',
