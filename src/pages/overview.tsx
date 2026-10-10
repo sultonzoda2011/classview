@@ -27,7 +27,6 @@ const Overview = () => {
   return (
     <section className="flex flex-col gap-6">
       <div>
-        <p className="text-sm font-medium text-muted-foreground">{t('navigation.welcome')}</p>
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{t('overview.title')}</h1>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

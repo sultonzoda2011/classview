@@ -4,7 +4,12 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { cn } from '../lib/utils'
 
-const Sidebar = () => {
+type SidebarProps = {
+  open?: boolean
+  onClose?: () => void
+}
+
+const Sidebar = ({ open = false, onClose }: SidebarProps) => {
   const location = useLocation()
   const { info } = useAuth()
   const { t } = useTranslation()
@@ -26,7 +31,7 @@ const Sidebar = () => {
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-card md:flex">
         <div className="flex items-center gap-3 border-b px-6 py-6">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">C</div>
+          <img src="/src/images/logo.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
           <div>
             <h1 className="font-bold tracking-tight text-foreground">ClassView</h1>
             <p className="text-xs text-muted-foreground">{t('navigation.streams')}</p>
@@ -59,23 +64,47 @@ const Sidebar = () => {
         </div>
       </aside>
 
-      <aside className="md:hidden fixed bottom-0 left-0 w-full h-16 bg-white dark:bg-gray-900 flex justify-around items-center shadow-md z-40 transition-colors duration-300">
-        {links.map(({ to, icon: Icon, label }) => {
-          const active = location.pathname === to
-          return (
-            <Link
-              key={to}
-              to={to}
-              aria-label={label}
-              className={cn(
-                'flex flex-col items-center justify-center transition-all',
-                active ? 'text-gray-900 dark:text-white scale-110' : 'text-gray-500 dark:text-gray-400',
-              )}
-            >
-              <Icon size={22} strokeWidth={1.5} />
-            </Link>
-          )
-        })}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-background/70 backdrop-blur-sm transition-opacity md:hidden',
+          open ? 'opacity-100' : 'pointer-events-none opacity-0',
+        )}
+        aria-hidden="true"
+        onClick={onClose}
+      />
+      <aside
+        aria-label="Main navigation"
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r bg-card shadow-xl transition-transform md:hidden',
+          open ? 'translate-x-0' : '-translate-x-full',
+        )}
+      >
+        <div className="flex items-center gap-3 border-b px-5 py-5">
+          <img src="/src/images/logo.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
+          <div>
+            <p className="font-bold tracking-tight text-foreground">ClassView</p>
+            <p className="text-xs text-muted-foreground">{t('navigation.streams')}</p>
+          </div>
+        </div>
+        <nav className="flex flex-col gap-1 p-4">
+          {links.map(({ to, icon: Icon, label }) => {
+            const active = location.pathname === to
+            return (
+              <Link
+                key={to}
+                to={to}
+                onClick={onClose}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors',
+                  active ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                )}
+              >
+                <Icon aria-hidden="true" />
+                <span>{label}</span>
+              </Link>
+            )
+          })}
+        </nav>
       </aside>
     </>
   )
