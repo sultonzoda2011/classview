@@ -33,101 +33,131 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
 
   useEffect(() => {
     if (!open || classRoomId == null) return
+
     let hls: Hls | null = null
     let cancelled = false
+    let failed = false
+    let loadTimeout: number | undefined
+    let removeNativeMetadataListener: (() => void) | undefined
+
+    const video = videoRef.current
     setError(null)
     setLoading(true)
 
-    const loadTimeout = window.setTimeout(() => {
-      if (cancelled) return
-      console.error('[ClassView] Stream did not become playable within 20 seconds.')
-      setError(t('streams.loadError'))
+    const clearLoadTimeout = () => {
+      if (loadTimeout !== undefined) window.clearTimeout(loadTimeout)
+    }
+
+    const fail = (message: string) => {
+      if (cancelled || failed) return
+      failed = true
+      clearLoadTimeout()
+      console.error('[ClassView] Stream playback failed:', message)
+      setError(message)
       setLoading(false)
-    }, 20_000)
+    }
 
     const finishLoading = () => {
-      window.clearTimeout(loadTimeout)
-      if (!cancelled) setLoading(false)
+      if (cancelled || failed) return
+      clearLoadTimeout()
+      setLoading(false)
     }
+
+    const tryPlay = () => {
+      if (cancelled || failed || !video || !video.paused) return
+      video.play().catch((e: unknown) => {
+        const name = typeof e === 'object' && e !== null && 'name' in e ? String(e.name) : ''
+        // The dialog cleanup intentionally cancels pending play requests.
+        if (name !== 'AbortError' && !cancelled) {
+          console.warn('[ClassView] Video playback was blocked:', e)
+          // Keep the video controls available; autoplay restrictions should not look like a network failure.
+          finishLoading()
+        }
+      })
+    }
+
+    if (!video) {
+      setError(t('streams.loadError'))
+      setLoading(false)
+      return
+    }
+
+    video.muted = true
+    video.removeAttribute('src')
+    video.onplaying = finishLoading
+    video.oncanplay = () => {
+      finishLoading()
+      tryPlay()
+    }
+    video.onloadeddata = finishLoading
+    video.onerror = () => fail(`${t('streams.loadError')} (media error ${video.error?.code ?? 'unknown'})`)
+
+    loadTimeout = window.setTimeout(() => {
+      fail('Поток не начал воспроизводиться за 20 секунд. Проверь RTSP-соединение и ошибки HLS в Console.')
+    }, 20_000)
 
     const run = async () => {
       let src: string
       try {
         src = isAdminLike ? await fetchAdminStream(classRoomId).unwrap() : await fetchMyStream().unwrap()
       } catch (e) {
-        if (!cancelled) {
-          window.clearTimeout(loadTimeout)
-          setError(getErrorMessage(e))
-          setLoading(false)
-        }
+        fail(getErrorMessage(e))
         return
       }
-      if (cancelled) return
-      const url = `${STREAM_ORIGIN}${src}`
-      const video = videoRef.current
-      if (!video) return
+      if (cancelled || failed) return
 
-      video.onerror = () => {
-        console.error('[ClassView] Video element error:', video.error)
-        if (!cancelled) {
-          window.clearTimeout(loadTimeout)
-          setError(t('streams.loadError'))
-          setLoading(false)
-        }
+      const url = `${STREAM_ORIGIN}${src}`
+
+      // Prefer hls.js in browsers that support Media Source Extensions.
+      // Native HLS is a fallback for Safari and other browsers without MSE support.
+      if (Hls.isSupported()) {
+        hls = new Hls({ lowLatencyMode: false })
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          if (!cancelled && !failed) tryPlay()
+        })
+        hls.on(Hls.Events.FRAG_BUFFERED, () => {
+          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) finishLoading()
+        })
+        hls.on(Hls.Events.ERROR, (_evt, data) => {
+          console.error('[ClassView] HLS error:', {
+            type: data.type,
+            details: data.details,
+            fatal: data.fatal,
+            response: data.response,
+          })
+          if (data.fatal) fail(`${t('streams.loadError')} (${data.type}: ${data.details})`)
+        })
+        hls.attachMedia(video)
+        hls.loadSource(url)
+        return
       }
 
       if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.onloadedmetadata = finishLoading
-        video.onloadeddata = finishLoading
+        const onLoadedMetadata = () => tryPlay()
+        video.addEventListener('loadedmetadata', onLoadedMetadata)
+        removeNativeMetadataListener = () => video.removeEventListener('loadedmetadata', onLoadedMetadata)
         video.src = url
         video.load()
-        video.play().catch((e: unknown) => console.warn('[ClassView] Native video autoplay was blocked:', e))
-        return
-      }
-      if (!Hls.isSupported()) {
-        window.clearTimeout(loadTimeout)
-        setError(t('streams.unsupportedBrowser'))
-        setLoading(false)
         return
       }
 
-      hls = new Hls({ lowLatencyMode: false })
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        finishLoading()
-        video.play().catch((e: unknown) => console.warn('[ClassView] HLS autoplay was blocked:', e))
-      })
-      hls.on(Hls.Events.FRAG_BUFFERED, finishLoading)
-      hls.on(Hls.Events.ERROR, (_evt, data) => {
-        console.error('[ClassView] HLS error:', {
-          type: data.type,
-          details: data.details,
-          fatal: data.fatal,
-          response: data.response,
-        })
-        if (data.fatal && !cancelled) {
-          window.clearTimeout(loadTimeout)
-          setError(`${t('streams.loadError')} (${data.type}: ${data.details})`)
-          setLoading(false)
-        }
-      })
-      hls.attachMedia(video)
-      hls.loadSource(url)
+      fail(t('streams.unsupportedBrowser'))
     }
-    run()
 
-    const videoEl = videoRef.current
+    void run()
+
     return () => {
       cancelled = true
-      window.clearTimeout(loadTimeout)
+      clearLoadTimeout()
       hls?.destroy()
-      if (videoEl) {
-        videoEl.onerror = null
-        videoEl.onloadedmetadata = null
-        videoEl.onloadeddata = null
-        videoEl.pause()
-        videoEl.src = ''
-        videoEl.load()
-      }
+      removeNativeMetadataListener?.()
+      video.onplaying = null
+      video.oncanplay = null
+      video.onloadeddata = null
+      video.onerror = null
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
     }
   }, [open, classRoomId, isAdminLike, fetchAdminStream, fetchMyStream, t])
 
@@ -166,7 +196,7 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
               <p className="text-sm">{error}</p>
             </div>
           )}
-          <video ref={videoRef} controls autoPlay muted playsInline className="w-full h-full object-contain" />
+          <video ref={videoRef} controls muted playsInline className="w-full h-full object-contain" />
         </div>
       </DialogContent>
     </Dialog>
