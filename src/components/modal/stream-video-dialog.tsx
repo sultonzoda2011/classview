@@ -38,12 +38,25 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
     setError(null)
     setLoading(true)
 
+    const loadTimeout = window.setTimeout(() => {
+      if (cancelled) return
+      console.error('[ClassView] Stream did not become playable within 20 seconds.')
+      setError(t('streams.loadError'))
+      setLoading(false)
+    }, 20_000)
+
+    const finishLoading = () => {
+      window.clearTimeout(loadTimeout)
+      if (!cancelled) setLoading(false)
+    }
+
     const run = async () => {
       let src: string
       try {
         src = isAdminLike ? await fetchAdminStream(classRoomId).unwrap() : await fetchMyStream().unwrap()
       } catch (e) {
         if (!cancelled) {
+          window.clearTimeout(loadTimeout)
           setError(getErrorMessage(e))
           setLoading(false)
         }
@@ -54,38 +67,67 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
       const video = videoRef.current
       if (!video) return
 
+      video.onerror = () => {
+        console.error('[ClassView] Video element error:', video.error)
+        if (!cancelled) {
+          window.clearTimeout(loadTimeout)
+          setError(t('streams.loadError'))
+          setLoading(false)
+        }
+      }
+
       if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.onloadedmetadata = finishLoading
+        video.onloadeddata = finishLoading
         video.src = url
-        video.onloadeddata = () => setLoading(false)
-        video.play().catch(() => {})
+        video.load()
+        video.play().catch((e: unknown) => console.warn('[ClassView] Native video autoplay was blocked:', e))
         return
       }
       if (!Hls.isSupported()) {
+        window.clearTimeout(loadTimeout)
         setError(t('streams.unsupportedBrowser'))
         setLoading(false)
         return
       }
-      hls = new Hls({ lowLatencyMode: true })
-      hls.loadSource(url)
-      hls.attachMedia(video)
+
+      hls = new Hls({ lowLatencyMode: false })
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        setLoading(false)
-        video.play().catch(() => {})
+        finishLoading()
+        video.play().catch((e: unknown) => console.warn('[ClassView] HLS autoplay was blocked:', e))
       })
+      hls.on(Hls.Events.FRAG_BUFFERED, finishLoading)
       hls.on(Hls.Events.ERROR, (_evt, data) => {
-        if (data.fatal) {
-          setError(t('streams.loadError'))
+        console.error('[ClassView] HLS error:', {
+          type: data.type,
+          details: data.details,
+          fatal: data.fatal,
+          response: data.response,
+        })
+        if (data.fatal && !cancelled) {
+          window.clearTimeout(loadTimeout)
+          setError(`${t('streams.loadError')} (${data.type}: ${data.details})`)
           setLoading(false)
         }
       })
+      hls.attachMedia(video)
+      hls.loadSource(url)
     }
     run()
 
     const videoEl = videoRef.current
     return () => {
       cancelled = true
+      window.clearTimeout(loadTimeout)
       hls?.destroy()
-      if (videoEl) videoEl.src = ''
+      if (videoEl) {
+        videoEl.onerror = null
+        videoEl.onloadedmetadata = null
+        videoEl.onloadeddata = null
+        videoEl.pause()
+        videoEl.src = ''
+        videoEl.load()
+      }
     }
   }, [open, classRoomId, isAdminLike, fetchAdminStream, fetchMyStream, t])
 
