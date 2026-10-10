@@ -11,7 +11,7 @@ In **GitHub → Settings → Secrets and variables → Actions → Variables**, 
 
 These must point to the deployed ClassView backend. Do not use `localhost` in a phone build: on Android, localhost refers to the phone itself.
 
-Alternatively, use **Actions → Capacitor Android → Run workflow** and enter both URLs as workflow inputs.
+Alternatively, use **Actions → Capacitor Android → Run workflow** and enter both URLs as workflow inputs. For pull requests only, if those variables are missing, the workflow uses `example.invalid` URLs to check that Android compilation succeeds; that APK will not connect to a backend and is for CI validation only.
 
 ## Download the APK
 
