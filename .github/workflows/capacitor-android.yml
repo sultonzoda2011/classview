@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       api_url:
@@ -27,8 +29,8 @@ jobs:
     name: Build Android APK
     runs-on: ubuntu-latest
     env:
-      VITE_API_URL: ${{ inputs.api_url || vars.VITE_API_URL }}
-      VITE_API_URL_STREAMS: ${{ inputs.streams_url || vars.VITE_API_URL_STREAMS }}
+      VITE_API_URL: ${{ inputs.api_url || vars.VITE_API_URL || (github.event_name == 'pull_request' && 'https://api.example.invalid/api') }}
+      VITE_API_URL_STREAMS: ${{ inputs.streams_url || vars.VITE_API_URL_STREAMS || (github.event_name == 'pull_request' && 'https://api.example.invalid') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
