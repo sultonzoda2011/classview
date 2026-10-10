@@ -1,20 +1,10 @@
-import { z } from "zod"
+import type { TFunction } from 'i18next'
+import { z } from 'zod'
 
-export interface ISendOtpForm {
-  phone: string
-}
+export const sendOtpSchema = (t: TFunction) =>
+  z.object({ email: z.string().trim().email(t('validation.email')) })
+export type SendOtpInput = z.infer<ReturnType<typeof sendOtpSchema>>
 
-export interface IVerifyOtpForm {
-  otpCode: string
-}
-
-export const sendOtpSchema = z.object({
-  phone: z.string().min(3, "Номер телефона обязателен"),
-})
-
-export const verifyOtpSchema = z.object({
-  otpCode: z.string().length(6, "Код должен состоять из 6 символов"),
-})
-
-export type SendOtpInput = z.infer<typeof sendOtpSchema>
-export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>
+export const verifyOtpSchema = (t: TFunction) =>
+  z.object({ otpCode: z.string().trim().length(6, t('validation.otpLength')) })
+export type VerifyOtpInput = z.infer<ReturnType<typeof verifyOtpSchema>>

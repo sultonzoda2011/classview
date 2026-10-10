@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 * {
   user-select: none;
@@ -7,4 +8,34 @@
   -ms-user-select: none;
 }
 
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-ring: var(--ring);
+}
+
+:root {
+  --ring: oklch(0.21 0.006 285.885);
+}
+
+.dark {
+  --ring: oklch(0.87 0.01 286);
+}
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+  .dark body {
+    @apply bg-gray-950 text-gray-100;
+  }
+}

@@ -27,6 +27,7 @@
 		"username": "Номи корбар",
 		"password": "Рамз",
 		"phone": "Телефон",
+		"email": "Email",
 		"changePassword": "Тағйир додани рамз"
 	},
 	"common": {
@@ -72,7 +73,7 @@
 	"login": {
 		"title": "Воридшавӣ ба система",
 		"subtitle": "Ба ClassView ворид шавед",
-		"usernamePlaceholder": "Логин ё email",
+		"usernamePlaceholder": "Email, телефон ё логин",
 		"passwordPlaceholder": "Рамз",
 		"forgotPassword": "Рамзро фаромӯш кардед?",
 		"loginButton": "Воридшавӣ",
@@ -102,7 +103,14 @@
 		"role": "Нақш",
 		"createUser": "Сохтани корбар",
 		"updateUser": "Навсозии корбар",
-		"userDetails": "Маълумоти корбар"
+		"userDetails": "Маълумоти корбар",
+		"connect": "Дастрасӣ ба камера",
+		"connectDescription": "Агар хомӯш бошад, волидайн наметавонад стримро кушояд",
+		"roles": {
+			"User": "Волидайн",
+			"Admin": "Маъмур",
+			"SuperAdmin": "Маъмури калон"
+		}
 	},
 	"menuUser": {
 		"title": "Профили шумо",
@@ -110,10 +118,73 @@
 	},
 	"modals": {
 		"sendOtp": {
-			"title": "Гирифтани коди тасдиқ",
-			"description": "Рақами телефони худро ворид кунед, то OTP гиред.",
-			"phonePlaceholder": "+992 (___) ___-__-__",
+			"title": "Барқарорсозии рамз",
+			"description": "Email-и худро ворид кунед, то коди тасдиқ гиред.",
+			"emailPlaceholder": "you@example.com",
 			"sendCode": "Фиристодани код"
+		},
+		"verifyOtp": {
+			"title": "Коди тасдиқро ворид кунед",
+			"description": "Мо ба {{email}} рамзи 6-рақама фиристодем",
+			"expiresIn": "Муддати коди боқимонда: {{time}}",
+			"expired": "Мӯҳлати код гузашт, рамзи навро дархост кунед",
+			"resend": "Фиристодани такрорӣ",
+			"verify": "Тасдиқ кардан"
+		},
+		"resetPassword": {
+			"title": "Рамзи нав",
+			"description": "Рамзи нав барои воридшавӣ интихоб кунед",
+			"newPassword": "Рамзи нав",
+			"confirmPassword": "Рамзро такрор кунед",
+			"submit": "Нигоҳ доштани рамз"
+		},
+		"changePassword": {
+			"required": "Ин рамзи муваққатӣ аст. Барои идома додан рамзи навро муайян кунед.",
+			"current": "Рамзи ҷорӣ",
+			"new": "Рамзи нав"
 		}
+	},
+	"confirm": {
+		"deleteCenterTitle": "Марказро нест кунем?",
+		"deleteCenterDescription": "Маркази «{{name}}» ва ҳамаи синфхонаҳои он барои ҳамеша нест карда мешаванд.",
+		"deleteClassroomTitle": "Синфро нест кунем?",
+		"deleteClassroomDescription": "Синфи «{{name}}» барои ҳамеша нест карда мешавад.",
+		"deleteUserTitle": "Корбарро нест кунем?",
+		"deleteUserDescription": "Корбари «{{name}}» барои ҳамеша нест карда мешавад."
+	},
+	"toasts": {
+		"centerCreated": "Марказ сохта шуд",
+		"centerUpdated": "Марказ навсозӣ шуд",
+		"centerDeleted": "Марказ нест карда шуд",
+		"classroomCreated": "Синф сохта шуд",
+		"classroomUpdated": "Синф навсозӣ шуд",
+		"classroomDeleted": "Синф нест карда шуд",
+		"userUpdated": "Маълумоти корбар навсозӣ шуд",
+		"userDeleted": "Корбар нест карда шуд",
+		"userCreatedMailSent": "Корбар сохта шуд, маълумоти воридшавӣ ба email фиристода шуд",
+		"userCreatedMailFailed": "Корбар сохта шуд, аммо мактуб фиристода нашуд — рамзро дастӣ хабар диҳед ё онро аз нав барқарор кунед",
+		"employeeCreatedMailSent": "Корманд сохта шуд, маълумоти воридшавӣ ба email фиристода шуд",
+		"employeeCreatedMailFailed": "Корманд сохта шуд, аммо мактуб фиристода нашуд — рамзро дастӣ хабар диҳед ё онро аз нав барқарор кунед",
+		"passwordChanged": "Рамз тағйир дода шуд",
+		"passwordReset": "Рамз бо муваффақият тағйир ёфт, акнун метавонед ворид шавед"
+	},
+	"validation": {
+		"required": "Майдони ҳатмӣ",
+		"tooLong": "Арзиш хеле дароз аст",
+		"email": "Email нодуруст",
+		"phone": "Рақами телефон нодуруст",
+		"time": "Формати вақт: СС:ДД",
+		"cameraUrl": "URL-и дурусти камера ворид кунед (rtsp:// ё http://)",
+		"selectCenter": "Марказро интихоб кунед",
+		"selectClassroom": "Синфро интихоб кунед",
+		"passwordMin": "Ҳадди ақал 6 аломат",
+		"passwordsMatch": "Рамзҳо мувофиқат намекунанд",
+		"otpLength": "Код бояд аз 6 рақам иборат бошад"
+	},
+	"streams": {
+		"unsupportedBrowser": "Браузер пахши стримро дастгирӣ намекунад",
+		"loadError": "Бор кардани видеострим ноком шуд",
+		"timeExpired": "Вақти тамошо ба анҷом расид",
+		"timeExpiringSoon": "Вақти тамошо ба зудӣ ба анҷом мерасад"
 	}
 }
