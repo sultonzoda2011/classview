@@ -37,16 +37,13 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
     let hls: Hls | null = null
     let cancelled = false
     let failed = false
-    let loadTimeout: number | undefined
+    let video: HTMLVideoElement | null = null
     let removeNativeMetadataListener: (() => void) | undefined
 
-    const video = videoRef.current
     setError(null)
     setLoading(true)
 
-    const clearLoadTimeout = () => {
-      if (loadTimeout !== undefined) window.clearTimeout(loadTimeout)
-    }
+    const clearLoadTimeout = () => window.clearTimeout(loadTimeout)
 
     const fail = (message: string) => {
       if (cancelled || failed) return
@@ -76,29 +73,15 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
       })
     }
 
-    if (!video) {
-      setError(t('streams.loadError'))
-      setLoading(false)
-      return
-    }
-
-    video.muted = true
-    video.removeAttribute('src')
-    video.onplaying = finishLoading
-    video.oncanplay = () => {
-      finishLoading()
-      tryPlay()
-    }
-    video.onloadeddata = finishLoading
-    video.onerror = () => fail(`${t('streams.loadError')} (media error ${video.error?.code ?? 'unknown'})`)
-
-    loadTimeout = window.setTimeout(() => {
+    const loadTimeout = window.setTimeout(() => {
       fail('Поток не начал воспроизводиться за 20 секунд. Проверь RTSP-соединение и ошибки HLS в Console.')
     }, 20_000)
 
     const run = async () => {
       let src: string
       try {
+        // Request the signed stream URL first. The Dialog content lives in a portal,
+        // so the <video> ref may not be attached on the first effect pass.
         src = isAdminLike ? await fetchAdminStream(classRoomId).unwrap() : await fetchMyStream().unwrap()
       } catch (e) {
         fail(getErrorMessage(e))
@@ -106,7 +89,23 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
       }
       if (cancelled || failed) return
 
+      const media = videoRef.current
+      if (!media) {
+        fail('Видеоплеер ещё не готов. Закрой окно потока и открой его снова.')
+        return
+      }
+      video = media
+
       const url = `${STREAM_ORIGIN}${src}`
+      media.muted = true
+      media.removeAttribute('src')
+      media.onplaying = finishLoading
+      media.oncanplay = () => {
+        finishLoading()
+        tryPlay()
+      }
+      media.onloadeddata = finishLoading
+      media.onerror = () => fail(`${t('streams.loadError')} (media error ${media.error?.code ?? 'unknown'})`)
 
       // Prefer hls.js in browsers that support Media Source Extensions.
       // Native HLS is a fallback for Safari and other browsers without MSE support.
@@ -116,7 +115,7 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
           if (!cancelled && !failed) tryPlay()
         })
         hls.on(Hls.Events.FRAG_BUFFERED, () => {
-          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) finishLoading()
+          if (media.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) finishLoading()
         })
         hls.on(Hls.Events.ERROR, (_evt, data) => {
           console.error('[ClassView] HLS error:', {
@@ -127,17 +126,17 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
           })
           if (data.fatal) fail(`${t('streams.loadError')} (${data.type}: ${data.details})`)
         })
-        hls.attachMedia(video)
+        hls.attachMedia(media)
         hls.loadSource(url)
         return
       }
 
-      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      if (media.canPlayType('application/vnd.apple.mpegurl')) {
         const onLoadedMetadata = () => tryPlay()
-        video.addEventListener('loadedmetadata', onLoadedMetadata)
-        removeNativeMetadataListener = () => video.removeEventListener('loadedmetadata', onLoadedMetadata)
-        video.src = url
-        video.load()
+        media.addEventListener('loadedmetadata', onLoadedMetadata)
+        removeNativeMetadataListener = () => media.removeEventListener('loadedmetadata', onLoadedMetadata)
+        media.src = url
+        media.load()
         return
       }
 
@@ -151,13 +150,16 @@ const StreamVideoDialog = ({ open, onOpenChange, classRoomId, classRoomName }: P
       clearLoadTimeout()
       hls?.destroy()
       removeNativeMetadataListener?.()
-      video.onplaying = null
-      video.oncanplay = null
-      video.onloadeddata = null
-      video.onerror = null
-      video.pause()
-      video.removeAttribute('src')
-      video.load()
+      const media = video ?? videoRef.current
+      if (media) {
+        media.onplaying = null
+        media.oncanplay = null
+        media.onloadeddata = null
+        media.onerror = null
+        media.pause()
+        media.removeAttribute('src')
+        media.load()
+      }
     }
   }, [open, classRoomId, isAdminLike, fetchAdminStream, fetchMyStream, t])
 
