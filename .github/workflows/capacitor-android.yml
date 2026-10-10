@@ -1,0 +1,126 @@
+name: Capacitor Android
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: 'Public HTTPS API URL, including /api (e.g. https://api.example.com/api)'
+        required: true
+        type: string
+      streams_url:
+        description: 'Public HTTPS backend base URL for HLS streams (e.g. https://api.example.com)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capacitor-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: ${{ inputs.api_url || vars.VITE_API_URL }}
+      VITE_API_URL_STREAMS: ${{ inputs.streams_url || vars.VITE_API_URL_STREAMS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Install Capacitor CLI and Android platform
+        run: npm install --no-save --package-lock=false --no-audit --no-fund @capacitor/core@8 @capacitor/cli@8 @capacitor/android@8
+
+      - name: Validate production API URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${VITE_API_URL}" || -z "${VITE_API_URL_STREAMS}" ]]; then
+            echo "::error::Set the VITE_API_URL and VITE_API_URL_STREAMS repository variables, or supply both URLs in the manual workflow run."
+            exit 1
+          fi
+
+          if [[ "${VITE_API_URL}" != https://* || "${VITE_API_URL_STREAMS}" != https://* ]]; then
+            echo "::error::ClassView Android builds require public HTTPS API and stream URLs. Localhost URLs will not work on a phone."
+            exit 1
+          fi
+
+          if [[ "${VITE_API_URL}" == *localhost* || "${VITE_API_URL}" == *127.0.0.1* || "${VITE_API_URL_STREAMS}" == *localhost* || "${VITE_API_URL_STREAMS}" == *127.0.0.1* ]]; then
+            echo "::error::Localhost cannot be used as the backend address in an Android APK."
+            exit 1
+          fi
+
+      - name: Build Vite app
+        run: npm run build
+
+      - name: Generate Android project
+        run: npx cap add android
+
+      - name: Sync web assets into Capacitor
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: classview-android-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-release:
+    name: Attach APK to GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: classview-android-debug-apk
+          path: release
+
+      - name: Publish APK release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/app-debug.apk
+          generate_release_notes: true
+          body: |
+            ClassView Android debug APK. This APK is suitable for testing and manual installation, not as a Play Store release build.
