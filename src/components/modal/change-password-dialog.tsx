@@ -52,6 +52,7 @@ const ChangePasswordDialog = ({ open, onOpenChange, required }: Props) => {
               control={form.control}
               name="currentPassword"
               label={t('modals.changePassword.current')}
+              placeholder={t('modals.changePassword.current')}
               type={show ? 'text' : 'password'}
               icon={Lock}
               autoComplete="current-password"
@@ -60,6 +61,7 @@ const ChangePasswordDialog = ({ open, onOpenChange, required }: Props) => {
               control={form.control}
               name="newPassword"
               label={t('modals.changePassword.new')}
+              placeholder={t('modals.changePassword.new')}
               type={show ? 'text' : 'password'}
               icon={Lock}
               autoComplete="new-password"
@@ -68,6 +70,7 @@ const ChangePasswordDialog = ({ open, onOpenChange, required }: Props) => {
               control={form.control}
               name="confirmNewPassword"
               label={t('modals.resetPassword.confirmPassword')}
+              placeholder={t('modals.resetPassword.confirmPassword')}
               type={show ? 'text' : 'password'}
               icon={Lock}
               autoComplete="new-password"

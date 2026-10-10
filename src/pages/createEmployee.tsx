@@ -46,9 +46,9 @@ const CreateEmployee = () => {
         <CardContent className="pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <TextField control={form.control} name="fullName" label={t('users.fullName')} icon={User} />
-              <TextField control={form.control} name="phoneNumber" label={t('auth.phone')} icon={Phone} />
-              <TextField control={form.control} name="email" label={t('auth.email')} type="email" icon={Mail} />
+              <TextField control={form.control} name="fullName" label={t('users.fullName')} placeholder={t('users.fullName')} icon={User} />
+              <TextField control={form.control} name="phoneNumber" label={t('auth.phone')} placeholder={t('auth.phone')} icon={Phone} />
+              <TextField control={form.control} name="email" label={t('auth.email')} type="email" placeholder={t('auth.email')} icon={Mail} />
               {isSuperAdmin && (
                 <SelectField
                   control={form.control}
