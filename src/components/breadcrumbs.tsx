@@ -29,6 +29,4 @@ const Breadcrumbs = () => {
 
 export default Breadcrumbs
 
-/* eslint-disable react-refresh/only-export-components */
 export { Breadcrumbs }
-/* eslint-enable react-refresh/only-export-components */

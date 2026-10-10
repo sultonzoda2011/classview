@@ -1,7 +1,7 @@
 import { Building2, GraduationCap, Users as UsersIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, CardContent } from '../components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Skeleton } from '../components/ui/skeleton'
 import { useGetCentersQuery } from '../store/centersApi'
 import { useGetClassRoomsQuery } from '../store/classRoomsApi'
@@ -25,24 +25,29 @@ const Overview = () => {
   const loading = loadingCenters || loadingUsers || loadingRooms
 
   return (
-    <div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">{t('overview.title')}</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section className="flex flex-col gap-6">
+      <div>
+        <p className="text-sm font-medium text-muted-foreground">{t('navigation.welcome')}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{t('overview.title')}</h1>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {loading
-          ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-2xl" />)
+          ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
           : stats.map((stat) => (
-              <Card key={stat.title} className={`bg-gradient-to-br ${stat.bg} text-white border-none shadow-md hover:shadow-xl transition-shadow`}>
-                <CardContent className="pt-6 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium opacity-80">{stat.title}</p>
-                    <p className="text-3xl font-bold mt-2">{stat.count}</p>
+              <Card key={stat.title} className="overflow-hidden transition-shadow hover:shadow-md">
+                <CardHeader className="flex flex-row items-center justify-between gap-4 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
+                  <div className={`rounded-lg bg-gradient-to-br ${stat.bg} p-2.5 text-white`}>
+                    <stat.icon aria-hidden="true" className="size-5" />
                   </div>
-                  <stat.icon className="w-12 h-12 opacity-70" />
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-bold tracking-tight text-foreground">{stat.count}</p>
                 </CardContent>
               </Card>
             ))}
       </div>
-    </div>
+    </section>
   )
 }
 
