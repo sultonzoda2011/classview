@@ -78,16 +78,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "${VITE_API_URL}" || -z "${VITE_API_URL_STREAMS}" ]]; then
-            echo "::error::Set the VITE_API_URL and VITE_API_URL_STREAMS repository variables, or supply both URLs in the manual workflow run."
+
+          if [[ -z "${VITE_API_URL:-}" || -z "${VITE_API_URL_STREAMS:-}" ]]; then
+            echo "::error::Set VITE_API_URL and VITE_API_URL_STREAMS in Repository Variables."
             exit 1
           fi
-          if [[ "${VITE_API_URL}" != https://* || "${VITE_API_URL_STREAMS}" != https://* ]]; then
-            echo "::error::ClassView Android builds require public HTTPS API and stream URLs. Localhost URLs will not work on a phone."
+
+          if [[ "$VITE_API_URL" != https://* || "$VITE_API_URL_STREAMS" != https://* ]]; then
+            echo "::error::Both URLs must start with https://"
             exit 1
           fi
-          if [[ "${VITE_API_URL}" == *localhost* || "${VITE_API_URL}" == *127.0.0.1* || "${VITE_API_URL_STREAMS}" == *localhost* || "${VITE_API_URL_STREAMS}" == *127.0.0.1* ]]; then
-            echo "::error::Localhost cannot be used as the backend address in an Android APK."
+
+          if [[ "$VITE_API_URL" == *localhost* || "$VITE_API_URL" == *127.0.0.1* || "$VITE_API_URL_STREAMS" == *localhost* || "$VITE_API_URL_STREAMS" == *127.0.0.1* ]]; then
+            echo "::error::Localhost URLs cannot be used in an Android APK."
             exit 1
           fi
 
