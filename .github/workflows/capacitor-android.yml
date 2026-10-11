@@ -9,11 +9,15 @@ on:
   workflow_dispatch:
     inputs:
       api_url:
-        description: 'Public HTTPS API URL, including /api (e.g. https://api.example.com/api)'
+        description:
+          'Public HTTPS API URL, including /api (e.g.
+          https://api.example.com/api)'
         required: true
         type: string
       streams_url:
-        description: 'Public HTTPS backend base URL for HLS streams (e.g. https://api.example.com)'
+        description:
+          'Public HTTPS backend base URL for HLS streams (e.g.
+          https://api.example.com)'
         required: true
         type: string
 
@@ -29,8 +33,13 @@ jobs:
     name: Build Android APK
     runs-on: ubuntu-latest
     env:
-      VITE_API_URL: ${{ inputs.api_url || vars.VITE_API_URL || (github.event_name == 'pull_request' && 'https://api.example.invalid/api') }}
-      VITE_API_URL_STREAMS: ${{ inputs.streams_url || vars.VITE_API_URL_STREAMS || (github.event_name == 'pull_request' && 'https://api.example.invalid') }}
+      VITE_API_URL:
+        ${{ inputs.api_url || vars.VITE_API_URL || (github.event_name ==
+        'pull_request' && 'https://api.example.invalid/api') }}
+      VITE_API_URL_STREAMS:
+        ${{ inputs.streams_url || vars.VITE_API_URL_STREAMS ||
+        (github.event_name == 'pull_request' && 'https://api.example.invalid')
+        }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,34 +68,43 @@ jobs:
       - name: Install web dependencies
         run: npm ci
 
-      - name: Install Capacitor CLI and Android platform
-        run: npm install --no-save --package-lock=false --no-audit --no-fund @capacitor/core@8 @capacitor/cli@8 @capacitor/android@8
+      - name: Install Capacitor CLI, Android platform, and asset generator
+        run:
+          npm install --no-save --package-lock=false --no-audit --no-fund
+          @capacitor/core@8 @capacitor/cli@8 @capacitor/android@8
+          @capacitor/assets
 
       - name: Validate production API URLs
         shell: bash
         run: |
           set -euo pipefail
-
           if [[ -z "${VITE_API_URL}" || -z "${VITE_API_URL_STREAMS}" ]]; then
             echo "::error::Set the VITE_API_URL and VITE_API_URL_STREAMS repository variables, or supply both URLs in the manual workflow run."
             exit 1
           fi
-
           if [[ "${VITE_API_URL}" != https://* || "${VITE_API_URL_STREAMS}" != https://* ]]; then
             echo "::error::ClassView Android builds require public HTTPS API and stream URLs. Localhost URLs will not work on a phone."
             exit 1
           fi
-
           if [[ "${VITE_API_URL}" == *localhost* || "${VITE_API_URL}" == *127.0.0.1* || "${VITE_API_URL_STREAMS}" == *localhost* || "${VITE_API_URL_STREAMS}" == *127.0.0.1* ]]; then
             echo "::error::Localhost cannot be used as the backend address in an Android APK."
             exit 1
           fi
 
-      - name: Build Vite app
+      - name: Build web app for Capacitor project creation
         run: npm run build
 
       - name: Generate Android project
         run: npx cap add android
+
+      - name: Generate Capacitor and PWA icons from assets/icon.png
+        run:
+          npx @capacitor/assets generate --iconBackgroundColor '#083048'
+          --iconBackgroundColorDark '#083048' --splashBackgroundColor '#ffffff'
+          --splashBackgroundColorDark '#ffffff'
+
+      - name: Build web app with updated PWA assets
+        run: npm run build
 
       - name: Sync web assets into Capacitor
         run: npx cap sync android

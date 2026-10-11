@@ -1,16 +1,24 @@
 {
 	"name": "ClassView",
-	"short_name": "CV",
+	"short_name": "ClassView",
 	"start_url": "/",
+	"scope": "/",
 	"display": "standalone",
 	"background_color": "#ffffff",
-	"theme_color": "#4f46e5",
+	"theme_color": "#083048",
 	"description": "Панель управления камерами для образовательных центров",
 	"icons": [
 		{
-			"src": "/src/images/favicon.ico",
+			"src": "/favicon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/favicon.png",
 			"sizes": "512x512",
-			"type":"image/png"
+			"type": "image/png",
+			"purpose": "any"
 		}
 	]
 }

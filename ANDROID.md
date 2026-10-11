@@ -22,17 +22,19 @@ Alternatively, use **Actions → Capacitor Android → Run workflow** and enter 
 
 No Google Play account or store upload is needed. Install the downloaded APK directly on your Android phone. It is a debug APK for personal testing and manual installation.
 
-## Local Android development
+## App icons and splash assets
 
-The Android platform is generated during CI so the repository does not need to commit generated Gradle files. To work on the native project locally, install Capacitor 8:
+The new ClassView mark is sourced from `public/favicon.png` for the web and adapted into the 1024 px icon sources under `assets/` for Capacitor. The source set includes an opaque `icon-only.png` for iOS, transparent `icon-foreground.png` plus `icon-background.png` for Android adaptive icons, and a 2732 px `splash.png`. The CI workflow installs `@capacitor/assets`, then regenerates Android and PWA resources from these files.
+
+For local generation, install Capacitor and the asset generator, then run:
 
 ```bash
-npm install @capacitor/core@^8 @capacitor/android@^8
-npm install -D @capacitor/cli@^8
+npm install --no-save --package-lock=false --no-audit --no-fund @capacitor/core@8 @capacitor/cli@8 @capacitor/android@8 @capacitor/assets
 npm run build
-npx cap add android
+npx cap add android # first time only
+npx @capacitor/assets generate --iconBackgroundColor '#083048' --iconBackgroundColorDark '#083048' --splashBackgroundColor '#ffffff' --splashBackgroundColorDark '#ffffff'
+npm run build
 npx cap sync android
-npx cap open android
 ```
 
-After the initial `npx cap add android`, keep the generated `android/` directory locally and use `npx cap sync android` whenever web assets or plugins change.
+If `android/` already exists, skip `npx cap add android`. Keep the generated `android/` directory locally and use `npx cap sync android` whenever web assets or plugins change.
