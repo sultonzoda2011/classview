@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Edit, GraduationCap, Mail, Phone, User } from 'lucide-react'
+import { ArrowLeft, Building2, Clock, Edit, GraduationCap, Mail, Phone, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Avatar } from '../components/avatar'
@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
 import { Skeleton } from '../components/ui/skeleton'
+import { useGetCentersQuery } from '../store/centersApi'
 import { useGetClassRoomsQuery } from '../store/classRoomsApi'
 import { useGetUserByIdQuery } from '../store/usersApi'
 
@@ -16,8 +17,11 @@ const UserDetails = () => {
   const navigate = useNavigate()
   const { data: user, isLoading } = useGetUserByIdQuery(id ?? '', { skip: !id })
   const { data: classRooms = [] } = useGetClassRoomsQuery()
+  const { data: centers = [] } = useGetCentersQuery()
 
+  const isParent = user?.role === 'User'
   const classRoomName = classRooms.find((c) => c.id === user?.classRoomId)?.name ?? '—'
+  const centerName = centers.find((c) => c.id === user?.centerId)?.name ?? '—'
 
   return (
     <section className="mx-auto flex max-w-3xl flex-col gap-4">
@@ -40,11 +44,19 @@ const UserDetails = () => {
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <InfoItem icon={User} label={t('users.childName')} value={user.childName} />
+            {isParent ? (
+              <InfoItem icon={User} label={t('users.childName')} value={user.childName} />
+            ) : (
+              <InfoItem icon={Building2} label={t('classrooms.center')} value={centerName} />
+            )}
             <InfoItem icon={Phone} label={t('auth.phone')} value={user.phoneNumber} />
             <InfoItem icon={Mail} label={t('auth.email')} value={user.email} />
-            <InfoItem icon={Clock} label={t('pages.profile.info.startTime')} value={`${user.startTime ?? '—'} — ${user.endTime ?? '—'}`} />
-            <InfoItem icon={GraduationCap} label={t('classrooms.title')} value={classRoomName} />
+            {isParent && (
+              <>
+                <InfoItem icon={Clock} label={t('pages.profile.info.startTime')} value={`${user.startTime ?? '—'} — ${user.endTime ?? '—'}`} />
+                <InfoItem icon={GraduationCap} label={t('classrooms.title')} value={classRoomName} />
+              </>
+            )}
           </CardContent>
           <CardFooter className="justify-end border-t">
             <Button asChild>

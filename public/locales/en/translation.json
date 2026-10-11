@@ -100,6 +100,8 @@
 		"title": "Users",
 		"fullName": "Full Name",
 		"childName": "Child Name",
+		"childNameOrRole": "Child / Role",
+		"classroomOrCenter": "Classroom / Center",
 		"role": "Role",
 		"createUser": "Create User",
 		"updateUser": "Update User",

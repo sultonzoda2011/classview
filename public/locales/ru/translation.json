@@ -100,6 +100,8 @@
 		"title": "Пользователи",
 		"fullName": "Полное имя",
 		"childName": "Имя ребёнка",
+		"childNameOrRole": "Ребёнок / Роль",
+		"classroomOrCenter": "Класс / Центр",
 		"role": "Роль",
 		"createUser": "Создать пользователя",
 		"updateUser": "Обновить пользователя",

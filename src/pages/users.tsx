@@ -14,6 +14,7 @@ import { Skeleton } from '../components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table'
 import { useAuth } from '../hooks/useAuth'
 import { notify } from '../lib/notify'
+import { useGetCentersQuery } from '../store/centersApi'
 import { useGetClassRoomsQuery } from '../store/classRoomsApi'
 import { useDeleteUserMutation, useGetUsersQuery } from '../store/usersApi'
 
@@ -22,11 +23,13 @@ const Users = () => {
   const { info } = useAuth()
   const { data: users = [], isLoading } = useGetUsersQuery()
   const { data: classRooms = [] } = useGetClassRoomsQuery()
+  const { data: centers = [] } = useGetCentersQuery()
   const [deleteUser, { isLoading: deleting }] = useDeleteUserMutation()
   const [search, setSearch] = useState('')
   const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(null)
 
   const classRoomNameById = useMemo(() => new Map(classRooms.map((c) => [c.id, c.name])), [classRooms])
+  const centerNameById = useMemo(() => new Map(centers.map((c) => [c.id, c.name])), [centers])
 
   const query = search.toLowerCase()
   const filtered = users.filter((u) => u.fullName.toLowerCase().includes(query) || u.childName.toLowerCase().includes(query) || u.phoneNumber.includes(search))
@@ -86,30 +89,36 @@ const Users = () => {
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <TableHead>{t('users.fullName')}</TableHead>
-                  <TableHead className="hidden sm:table-cell">{t('users.childName')}</TableHead>
-                  <TableHead className="hidden md:table-cell">{t('classrooms.title')}</TableHead>
+                  <TableHead className="hidden sm:table-cell">{t('users.childNameOrRole')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('users.classroomOrCenter')}</TableHead>
                   <TableHead className="hidden lg:table-cell">{t('auth.phone')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('users.connect')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar name={user.fullName} size="sm" />
-                        <div className="min-w-0">
-                          <p className="truncate font-medium">{user.fullName}</p>
-                          <p className="truncate text-xs text-muted-foreground sm:hidden">{user.childName}</p>
-                          <p className="hidden truncate text-xs text-muted-foreground sm:block">{user.email}</p>
+                {filtered.map((user) => {
+                  const isParent = user.role === 'User'
+                  const secondaryLine = isParent ? user.childName : t(`users.roles.${user.role}`)
+                  const classroomOrCenter = isParent
+                    ? (classRoomNameById.get(user.classRoomId ?? -1) ?? t('common.noData'))
+                    : (centerNameById.get(user.centerId ?? -1) ?? t('common.noData'))
+                  return (
+                    <TableRow key={user.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar name={user.fullName} size="sm" />
+                          <div className="min-w-0">
+                            <p className="truncate font-medium">{user.fullName}</p>
+                            <p className="truncate text-xs text-muted-foreground sm:hidden">{secondaryLine}</p>
+                            <p className="hidden truncate text-xs text-muted-foreground sm:block">{user.email}</p>
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">{user.childName}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <Badge variant="outline">{classRoomNameById.get(user.classRoomId ?? -1) ?? t('common.noData')}</Badge>
-                    </TableCell>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">{secondaryLine}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Badge variant="outline">{classroomOrCenter}</Badge>
+                      </TableCell>
                     <TableCell className="hidden text-muted-foreground lg:table-cell">{user.phoneNumber}</TableCell>
                     <TableCell className="hidden md:table-cell">
                       {user.connect ? (
@@ -146,7 +155,8 @@ const Users = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  )
+                })}
               </TableBody>
             </Table>
           )}

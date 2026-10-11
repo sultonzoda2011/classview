@@ -1,14 +1,14 @@
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 import axios, { type AxiosRequestConfig, type AxiosError } from 'axios'
-import Cookies from 'js-cookie'
 import { clearAuthToken } from '../hooks/useAuth'
+import { authStorage } from '../lib/authStorage'
 import { notify } from '../lib/notify'
 import { API_URL } from './env'
 
 export const httpClient = axios.create({ baseURL: API_URL })
 
 httpClient.interceptors.request.use((config) => {
-  const token = Cookies.get('token')
+  const token = authStorage.get('token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
