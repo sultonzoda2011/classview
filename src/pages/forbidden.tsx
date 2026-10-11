@@ -6,11 +6,15 @@ import { Button } from '../components/ui/button'
 const Forbidden = () => {
   const { t } = useTranslation()
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 p-4">
-      <Lock className="w-16 h-16 text-amber-500 mb-4 dark:text-amber-400" />
-      <h1 className="text-4xl font-bold text-gray-800 mb-2 dark:text-gray-200 text-center">{t('pages.forbidden.title')}</h1>
-      <p className="text-gray-600 mb-6 text-center max-w-md dark:text-gray-400">{t('pages.forbidden.description')}</p>
-      <Button asChild size="lg" variant="secondary">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-4 text-center">
+      <div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
+        <Lock aria-hidden="true" className="size-6" />
+      </div>
+      <div className="max-w-md space-y-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-balance">{t('pages.forbidden.title')}</h1>
+        <p className="text-muted-foreground">{t('pages.forbidden.description')}</p>
+      </div>
+      <Button asChild size="lg" variant="outline">
         <Link to="/login">{t('pages.forbidden.backToLogin')}</Link>
       </Button>
     </div>

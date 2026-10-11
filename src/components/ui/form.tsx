@@ -53,7 +53,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
   const id = React.useId()
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn('space-y-1.5', className)} {...props} />
+      <div ref={ref} className={cn('grid gap-2', className)} {...props} />
     </FormItemContext.Provider>
   )
 })
@@ -61,7 +61,7 @@ FormItem.displayName = 'FormItem'
 
 const FormLabel = React.forwardRef<React.ElementRef<typeof Label>, React.ComponentPropsWithoutRef<typeof Label>>(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField()
-  return <Label ref={ref} className={cn(error && 'text-red-600 dark:text-red-400', className)} htmlFor={formItemId} {...props} />
+  return <Label ref={ref} className={cn(error && 'text-destructive', className)} htmlFor={formItemId} {...props} />
 })
 FormLabel.displayName = 'FormLabel'
 
@@ -81,7 +81,7 @@ FormControl.displayName = 'FormControl'
 
 const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
-  return <p ref={ref} id={formDescriptionId} className={cn('text-xs text-gray-500 dark:text-gray-400', className)} {...props} />
+  return <p ref={ref} id={formDescriptionId} className={cn('text-xs text-muted-foreground', className)} {...props} />
 })
 FormDescription.displayName = 'FormDescription'
 
@@ -90,7 +90,7 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
   const body = error ? String(error?.message ?? '') : children
   if (!body) return null
   return (
-    <p ref={ref} id={formMessageId} role="alert" className={cn('text-xs font-medium text-red-600 dark:text-red-400', className)} {...props}>
+    <p ref={ref} id={formMessageId} role="alert" className={cn('text-xs font-medium text-destructive', className)} {...props}>
       {body}
     </p>
   )

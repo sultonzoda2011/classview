@@ -1,13 +1,14 @@
 import { cn } from '../lib/utils'
 
-/** Единый круглый аватар-инициал — используется в хедере и на странице профиля. */
-export const Avatar = ({ name, size = 'md' }: { name?: string; size?: 'md' | 'lg' }) => (
-  <div
-    className={cn(
-      'flex items-center justify-center rounded-full bg-gray-800 dark:bg-gray-600 font-bold text-white select-none shadow-sm',
-      size === 'md' ? 'h-10 w-10 sm:h-11 sm:w-11 text-base' : 'h-20 w-20 text-2xl',
-    )}
-  >
-    {name?.charAt(0).toUpperCase() ?? '?'}
+const SIZES = {
+  sm: 'size-8 text-sm',
+  md: 'size-9 text-sm',
+  lg: 'size-20 text-3xl',
+} as const
+
+/** Единый круглый аватар-инициал — используется в хедере, таблицах и на странице профиля. */
+export const Avatar = ({ name, size = 'md', className }: { name?: string; size?: keyof typeof SIZES; className?: string }) => (
+  <div aria-hidden="true" className={cn('flex shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground select-none', SIZES[size], className)}>
+    {name?.trim().charAt(0).toUpperCase() || '?'}
   </div>
 )

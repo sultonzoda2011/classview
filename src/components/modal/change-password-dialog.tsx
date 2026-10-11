@@ -75,7 +75,7 @@ const ChangePasswordDialog = ({ open, onOpenChange, required }: Props) => {
               icon={Lock}
               autoComplete="new-password"
               endAdornment={
-                <button type="button" tabIndex={-1} onClick={() => setShow((v) => !v)} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                <button type="button" tabIndex={-1} onClick={() => setShow((v) => !v)} className="rounded-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40">
                   {show ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               }

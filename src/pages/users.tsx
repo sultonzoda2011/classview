@@ -1,10 +1,13 @@
-import { Edit, Eye, Plus, Trash2, Users as UsersIcon } from 'lucide-react'
+import { Check, Edit, Eye, Minus, Plus, Trash2, Users as UsersIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { Avatar } from '../components/avatar'
+import PageHeader from '../components/page-header'
 import SearchInput from '../components/search-input'
+import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { ConfirmDialog } from '../components/ui/confirm-dialog'
 import { EmptyState } from '../components/ui/empty-state'
 import { Skeleton } from '../components/ui/skeleton'
@@ -25,12 +28,8 @@ const Users = () => {
 
   const classRoomNameById = useMemo(() => new Map(classRooms.map((c) => [c.id, c.name])), [classRooms])
 
-  const filtered = users.filter(
-    (u) =>
-      u.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      u.childName.toLowerCase().includes(search.toLowerCase()) ||
-      u.phoneNumber.includes(search),
-  )
+  const query = search.toLowerCase()
+  const filtered = users.filter((u) => u.fullName.toLowerCase().includes(query) || u.childName.toLowerCase().includes(query) || u.phoneNumber.includes(search))
 
   const handleDelete = async () => {
     if (!toDelete) return
@@ -45,73 +44,111 @@ const Users = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <CardTitle>{t('common.manage')} {t('users.title')}</CardTitle>
-            <CardDescription>{t('users.title')}</CardDescription>
-          </div>
-          <div className="flex flex-wrap gap-2">
+      <PageHeader
+        title={t('users.title')}
+        actions={
+          <>
             {info?.role === 'SuperAdmin' && (
-              <Button asChild variant="secondary"><Link to="/users/create-employee"><Plus data-icon="inline-start" />{t('common.addEmployee')}</Link></Button>
+              <Button asChild variant="outline">
+                <Link to="/users/create-employee">
+                  <Plus />
+                  {t('common.addEmployee')}
+                </Link>
+              </Button>
             )}
-            <Button asChild><Link to="/users/create"><Plus data-icon="inline-start" />{t('common.createUser')}</Link></Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <SearchInput value={search} onChange={setSearch} />
-        </CardContent>
-      </Card>
+            <Button asChild>
+              <Link to="/users/create">
+                <Plus />
+                {t('common.createUser')}
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
-      <Card>
-        <CardContent className="pt-5">
+      <Card className="gap-4 overflow-hidden pb-0">
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <CardTitle>{t('users.title')}</CardTitle>
+            <Badge variant="secondary" className="tabular-nums">
+              {filtered.length}
+            </Badge>
+          </div>
+          <SearchInput value={search} onChange={setSearch} />
+        </CardHeader>
+        <CardContent className="border-t px-0">
           {isLoading ? (
-        <Skeleton className="h-96 rounded-xl" />
-      ) : filtered.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('users.fullName')}</TableHead>
-              <TableHead>{t('users.childName')}</TableHead>
-              <TableHead>{t('classrooms.title')}</TableHead>
-              <TableHead className="text-right">{t('common.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.fullName}</TableCell>
-                <TableCell>{user.childName}</TableCell>
-                <TableCell>{classRoomNameById.get(user.classRoomId ?? -1) ?? t('common.noData')}</TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <Button asChild variant="ghost" size="icon">
-                      <Link to={`/users/${user.id}`} title={t('users.userDetails')}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button asChild variant="ghost" size="icon">
-                      <Link to={`/update-user/${user.id}`} title={t('common.edit')}>
-                        <Edit className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30"
-                      onClick={() => setToDelete({ id: user.id, name: user.fullName })}
-                      title={t('common.delete')}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            <Skeleton className="m-6 h-72" />
+          ) : filtered.length === 0 ? (
+            <EmptyState icon={UsersIcon} title={t('common.noData')} className="m-6 border-0" />
           ) : (
-            <EmptyState icon={UsersIcon} title={t('common.noData')} />
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>{t('users.fullName')}</TableHead>
+                  <TableHead className="hidden sm:table-cell">{t('users.childName')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('classrooms.title')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('auth.phone')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('users.connect')}</TableHead>
+                  <TableHead className="text-right">{t('common.actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar name={user.fullName} size="sm" />
+                        <div className="min-w-0">
+                          <p className="truncate font-medium">{user.fullName}</p>
+                          <p className="truncate text-xs text-muted-foreground sm:hidden">{user.childName}</p>
+                          <p className="hidden truncate text-xs text-muted-foreground sm:block">{user.email}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">{user.childName}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Badge variant="outline">{classRoomNameById.get(user.classRoomId ?? -1) ?? t('common.noData')}</Badge>
+                    </TableCell>
+                    <TableCell className="hidden text-muted-foreground lg:table-cell">{user.phoneNumber}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {user.connect ? (
+                        <Badge variant="success">
+                          <Check aria-hidden="true" />
+                          <span className="sr-only">{t('users.connect')}</span>
+                        </Badge>
+                      ) : (
+                        <Minus aria-hidden="true" className="size-4 text-muted-foreground" />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-1">
+                        <Button asChild variant="ghost" size="icon-sm">
+                          <Link to={`/users/${user.id}`} aria-label={t('users.userDetails')} title={t('users.userDetails')}>
+                            <Eye />
+                          </Link>
+                        </Button>
+                        <Button asChild variant="ghost" size="icon-sm">
+                          <Link to={`/update-user/${user.id}`} aria-label={t('common.edit')} title={t('common.edit')}>
+                            <Edit />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          aria-label={t('common.delete')}
+                          title={t('common.delete')}
+                          onClick={() => setToDelete({ id: user.id, name: user.fullName })}
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>

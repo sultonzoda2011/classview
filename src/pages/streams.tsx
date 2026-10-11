@@ -1,12 +1,12 @@
 import { Video } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import StreamVideoDialog from '../components/modal/stream-video-dialog'
+import PageHeader from '../components/page-header'
 import SearchInput from '../components/search-input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import StreamCard from '../components/stream-card'
 import { EmptyState } from '../components/ui/empty-state'
 import { Skeleton } from '../components/ui/skeleton'
-import StreamCard from '../components/stream-card'
-import StreamVideoDialog from '../components/modal/stream-video-dialog'
 import { useAuth } from '../hooks/useAuth'
 import { useGetCentersQuery } from '../store/centersApi'
 import { useGetClassRoomsQuery } from '../store/classRoomsApi'
@@ -25,43 +25,25 @@ const Streams = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('navigation.streams')}</CardTitle>
-          <CardDescription>{t('classrooms.title')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SearchInput value={search} onChange={setSearch} />
-        </CardContent>
-      </Card>
+      <PageHeader title={t('navigation.streams')} actions={<SearchInput value={search} onChange={setSearch} />} />
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-56 rounded-2xl" />
+            <Skeleton key={i} className="h-64 rounded-xl" />
           ))}
         </div>
       ) : filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((c) => (
-            <StreamCard
-              key={c.id}
-              name={c.name}
-              center={isAdminLike ? centerNameById.get(c.centerId) : undefined}
-              onClick={() => setSelected({ id: c.id, name: c.name })}
-            />
+            <StreamCard key={c.id} name={c.name} center={isAdminLike ? centerNameById.get(c.centerId) : undefined} onClick={() => setSelected({ id: c.id, name: c.name })} />
           ))}
         </div>
       ) : (
         <EmptyState icon={Video} title={t('common.noData')} />
       )}
 
-      <StreamVideoDialog
-        open={!!selected}
-        onOpenChange={(open) => !open && setSelected(null)}
-        classRoomId={selected?.id ?? null}
-        classRoomName={selected?.name}
-      />
+      <StreamVideoDialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)} classRoomId={selected?.id ?? null} classRoomName={selected?.name} />
     </section>
   )
 }

@@ -31,7 +31,7 @@ const Sidebar = ({ open = false, onClose }: SidebarProps) => {
     <>
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-background shadow-sm md:flex">
         <div className="flex items-center gap-3 border-b px-6 py-6">
-          <img src="/src/images/logo.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
+          <img src="/favicon.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
           <div>
             <h1 className="font-bold tracking-tight text-foreground">ClassView</h1>
             <p className="text-xs text-muted-foreground">{t('navigation.streams')}</p>
@@ -80,7 +80,7 @@ const Sidebar = ({ open = false, onClose }: SidebarProps) => {
         )}
       >
         <div className="flex items-center gap-3 border-b px-5 py-5">
-          <img src="/src/images/logo.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
+          <img src="/favicon.png" alt="ClassView" className="size-10 rounded-xl object-cover" />
           <div>
             <p className="font-bold tracking-tight text-foreground">ClassView</p>
             <p className="text-xs text-muted-foreground">{t('navigation.streams')}</p>

@@ -11,11 +11,13 @@ interface EmptyStateProps {
 
 /** Единое пустое состояние для списков (нет центров, нет классов и т.д.) */
 const EmptyState = ({ icon: Icon, title, description, action, className }: EmptyStateProps) => (
-  <div className={cn('flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 py-16 text-center', className)}>
-    <Icon className="h-10 w-10 text-gray-300 dark:text-gray-600" />
-    <div>
-      <p className="font-medium text-gray-700 dark:text-gray-300">{title}</p>
-      {description && <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{description}</p>}
+  <div className={cn('flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-16 text-center', className)}>
+    <div className="flex size-11 items-center justify-center rounded-full bg-muted text-muted-foreground">
+      <Icon className="size-5" aria-hidden="true" />
+    </div>
+    <div className="space-y-1">
+      <p className="text-sm font-medium">{title}</p>
+      {description && <p className="text-sm text-muted-foreground">{description}</p>}
     </div>
     {action}
   </div>

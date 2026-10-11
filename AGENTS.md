@@ -23,7 +23,9 @@ React 19 + Vite + TS strict — фронт панели камер классо�
 - `src/api/baseQuery.ts`: axios, разворачивает `{statusCode,data,message}`, ошибки → тост (sonner), 401 → разлогин (кроме `/Account/login|send-otp|verify-otp|reset-password`), `silent: true` гасит тост
 - `src/hooks/useAuth.ts` — единственный decode JWT, токен в cookie `token`, реактивность через `useSyncExternalStore` + событие `app:token-changed`
 - Роутинг `src/App.tsx`: createBrowserRouter, все страницы ленивые; роли — `RoleProtectedRoute` (SuperAdmin: `/`, `/centers`, `/users/create-employee`; Admin+SuperAdmin: `/users`, `/classrooms`, CRUD пользователей)
-- UI: `components/ui/*` — шадcn-подобный кит (Radix + Tailwind v4 + cva); поля форм — `components/fields/*`; составные формы — `components/forms/*`; диалоги сущностей — `components/modal/*`
+- UI: `components/ui/*` — shadcn-кит (Radix + Tailwind v4 + cva), включая `card`, `table`, `sheet`, `sidebar`; поля форм — `components/fields/*`; составные формы — `components/forms/*`; диалоги сущностей — `components/modal/*`
+- Стили: единственный глобальный файл `src/global.css` — там все токены (`--background`, `--primary`, `--sidebar-*`…) для светлой и тёмной темы. В компонентах — только семантические классы (`bg-card`, `text-muted-foreground`, `border-border`), без `gray-*`/`slate-*` и без `dark:` для цветов
+- Каркас: `layout/layout.tsx` = `SidebarProvider` + `AppSidebar` + `Header` (без breadcrumbs). Заголовок страницы — `components/page-header.tsx`; роль `User` видит шапку без боковой панели
 - zod-схемы в `src/types/*.ts` — фабрики `schema(t)`, а не статичные объекты
 - Переводы: `public/locales/{en,ru,tj}/translation.json`; в тестах загружаются напрямую, язык по умолчанию — `ru`
 

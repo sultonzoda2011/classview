@@ -1,16 +1,20 @@
-import { GraduationCap, Plus } from 'lucide-react'
+import { Edit, GraduationCap, Plus, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import ClassroomCard from '../components/classroom-card'
 import ClassroomFormDialog from '../components/modal/classroom-form-dialog'
+import PageHeader from '../components/page-header'
 import SearchInput from '../components/search-input'
+import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { ConfirmDialog } from '../components/ui/confirm-dialog'
 import { EmptyState } from '../components/ui/empty-state'
 import { Skeleton } from '../components/ui/skeleton'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table'
 import { useAuth } from '../hooks/useAuth'
+import { notify } from '../lib/notify'
 import { useGetCentersQuery } from '../store/centersApi'
-import { useGetClassRoomsQuery } from '../store/classRoomsApi'
+import { useDeleteClassRoomMutation, useGetClassRoomsQuery } from '../store/classRoomsApi'
 import type { IClassRoom } from '../types/classRoom'
 
 const ClassRooms = () => {
@@ -18,62 +22,128 @@ const ClassRooms = () => {
   const { info } = useAuth()
   const { data: classRooms = [], isLoading } = useGetClassRoomsQuery()
   const { data: centers = [] } = useGetCentersQuery()
+  const [deleteClassRoom, { isLoading: deleting }] = useDeleteClassRoomMutation()
   const [search, setSearch] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<IClassRoom | null>(null)
+  const [toDelete, setToDelete] = useState<IClassRoom | null>(null)
 
   const centerNameById = useMemo(() => new Map(centers.map((c) => [c.id, c.name])), [centers])
   const filtered = classRooms.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
   const fixedCenterId = info?.role === 'Admin' ? Number(info.centerId) : undefined
 
+  const handleDelete = async () => {
+    if (!toDelete) return
+    try {
+      await deleteClassRoom(toDelete.id).unwrap()
+      notify.success(t('toasts.classroomDeleted'))
+    } catch {
+      return
+    }
+    setToDelete(null)
+  }
+
   return (
     <section className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <CardTitle>{t('common.manage')} {t('classrooms.title')}</CardTitle>
-            <CardDescription>{t('classrooms.title')}</CardDescription>
-          </div>
+      <PageHeader
+        title={t('classrooms.title')}
+        actions={
           <Button
             onClick={() => {
               setEditing(null)
               setDialogOpen(true)
             }}
           >
-            <Plus data-icon="inline-start" />
+            <Plus />
             {t('classrooms.createClassroom')}
           </Button>
-        </CardHeader>
-        <CardContent>
+        }
+      />
+
+      <Card className="gap-4 overflow-hidden pb-0">
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <CardTitle>{t('classrooms.title')}</CardTitle>
+            <Badge variant="secondary" className="tabular-nums">
+              {filtered.length}
+            </Badge>
+          </div>
           <SearchInput value={search} onChange={setSearch} />
+        </CardHeader>
+        <CardContent className="border-t px-0">
+          {isLoading ? (
+            <Skeleton className="m-6 h-56" />
+          ) : filtered.length === 0 ? (
+            <EmptyState icon={GraduationCap} title={t('common.noData')} className="m-6 border-0" />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>{t('classrooms.name')}</TableHead>
+                  <TableHead>{t('classrooms.center')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('classrooms.cameraUrl')}</TableHead>
+                  <TableHead className="text-right">{t('common.actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((classRoom) => (
+                  <TableRow key={classRoom.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                          <GraduationCap aria-hidden="true" className="size-4" />
+                        </div>
+                        <span className="truncate font-medium">{classRoom.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{centerNameById.get(classRoom.centerId) || t('common.noData')}</TableCell>
+                    <TableCell className="hidden max-w-xs lg:table-cell">
+                      <code className="block truncate text-xs text-muted-foreground">{classRoom.cameraUrl}</code>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label={t('common.edit')}
+                          title={t('common.edit')}
+                          onClick={() => {
+                            setEditing(classRoom)
+                            setDialogOpen(true)
+                          }}
+                        >
+                          <Edit />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          aria-label={t('common.delete')}
+                          title={t('common.delete')}
+                          onClick={() => setToDelete(classRoom)}
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 rounded-2xl" />
-          ))}
-        </div>
-      ) : filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((classRoom) => (
-            <ClassroomCard
-              key={classRoom.id}
-              classRoom={classRoom}
-              centerName={centerNameById.get(classRoom.centerId) ?? ''}
-              onEdit={(c) => {
-                setEditing(c)
-                setDialogOpen(true)
-              }}
-            />
-          ))}
-        </div>
-      ) : (
-        <EmptyState icon={GraduationCap} title={t('common.noData')} />
-      )}
-
       <ClassroomFormDialog open={dialogOpen} onOpenChange={setDialogOpen} classRoom={editing} fixedCenterId={fixedCenterId} />
+
+      <ConfirmDialog
+        open={!!toDelete}
+        onOpenChange={(open) => !open && setToDelete(null)}
+        title={t('confirm.deleteClassroomTitle')}
+        description={t('confirm.deleteClassroomDescription', { name: toDelete?.name })}
+        onConfirm={handleDelete}
+        loading={deleting}
+      />
     </section>
   )
 }

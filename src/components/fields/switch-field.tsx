@@ -16,10 +16,10 @@ export function SwitchField<T extends FieldValues>({ control, name, label, descr
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-200 dark:border-gray-800 p-3">
+        <FormItem className="flex flex-row items-center justify-between gap-4 rounded-lg border p-3">
           <div className="space-y-0.5">
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{label}</p>
-            {description && <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>}
+            <p className="text-sm font-medium">{label}</p>
+            {description && <p className="text-xs text-muted-foreground">{description}</p>}
           </div>
           <FormControl>
             <Switch checked={!!field.value} onCheckedChange={field.onChange} />

@@ -2,14 +2,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 import { cn } from '../../lib/utils'
 
-const badgeVariants = cva('inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors', {
+const badgeVariants = cva('inline-flex items-center justify-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap [&>svg]:size-3', {
   variants: {
     variant: {
-      default: 'border-transparent bg-gray-900 text-white dark:bg-white dark:text-gray-900',
-      secondary: 'border-transparent bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100',
-      success: 'border-transparent bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-      destructive: 'border-transparent bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
-      outline: 'border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300',
+      default: 'border-transparent bg-primary text-primary-foreground',
+      secondary: 'border-transparent bg-secondary text-secondary-foreground',
+      success: 'border-transparent bg-success/15 text-success',
+      destructive: 'border-transparent bg-destructive/10 text-destructive',
+      outline: 'text-foreground',
     },
   },
   defaultVariants: { variant: 'default' },
@@ -18,7 +18,8 @@ const badgeVariants = cva('inline-flex items-center rounded-full border px-2.5 p
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
-  return <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  return <div data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
 }
 
-export { Badge }
+// eslint-disable-next-line react-refresh/only-export-components -- badgeVariants нужен для стилизации ссылок-бейджей, как в оригинальном shadcn
+export { Badge, badgeVariants }

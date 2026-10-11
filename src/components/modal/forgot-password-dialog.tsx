@@ -141,7 +141,7 @@ const ForgotPasswordDialog = ({ open, onOpenChange }: Props) => {
                   placeholder="000000"
                   autoComplete="one-time-code"
                 />
-                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>
                     {secondsLeft > 0 ? t('modals.verifyOtp.expiresIn', { time: `${mm}:${ss}` }) : t('modals.verifyOtp.expired')}
                   </span>
@@ -149,7 +149,7 @@ const ForgotPasswordDialog = ({ open, onOpenChange }: Props) => {
                     type="button"
                     onClick={onResend}
                     disabled={secondsLeft > OTP_SECONDS - 60 || sending}
-                    className="font-medium text-gray-900 dark:text-gray-100 hover:underline disabled:opacity-40 disabled:no-underline"
+                    className="font-medium text-foreground hover:underline disabled:opacity-40 disabled:no-underline"
                   >
                     {t('modals.verifyOtp.resend')}
                   </button>
@@ -179,7 +179,7 @@ const ForgotPasswordDialog = ({ open, onOpenChange }: Props) => {
                   icon={Lock}
                   placeholder={t('modals.resetPassword.newPassword')}
                   endAdornment={
-                    <button type="button" tabIndex={-1} onClick={() => setShowPassword((v) => !v)} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    <button type="button" tabIndex={-1} onClick={() => setShowPassword((v) => !v)} className="rounded-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/40">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   }

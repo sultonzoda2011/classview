@@ -6,13 +6,10 @@ const Separator = React.forwardRef<React.ElementRef<typeof SeparatorPrimitive.Ro
   ({ className, orientation = 'horizontal', decorative = true, ...props }, ref) => (
     <SeparatorPrimitive.Root
       ref={ref}
+      data-slot="separator"
       decorative={decorative}
       orientation={orientation}
-      className={cn(
-        'shrink-0 bg-gray-200 dark:bg-gray-800',
-        orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
-        className,
-      )}
+      className={cn('shrink-0 bg-border', orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px', className)}
       {...props}
     />
   ),

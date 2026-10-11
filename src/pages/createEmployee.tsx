@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { SelectField } from '../components/fields/select-field'
 import { TextField } from '../components/fields/text-field'
 import { Button } from '../components/ui/button'
+import PageHeader from '../components/page-header'
 import { Card, CardContent } from '../components/ui/card'
 import { Form } from '../components/ui/form'
 import { useAuth } from '../hooks/useAuth'
@@ -40,10 +41,10 @@ const CreateEmployee = () => {
   }
 
   return (
-    <section>
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">{t('common.addEmployee')}</h1>
-      <Card className="max-w-2xl mx-auto">
-        <CardContent className="pt-6">
+    <section className="mx-auto flex max-w-2xl flex-col gap-6">
+      <PageHeader title={t('common.addEmployee')} />
+      <Card>
+        <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <TextField control={form.control} name="fullName" label={t('users.fullName')} placeholder={t('users.fullName')} icon={User} />

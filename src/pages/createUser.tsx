@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import UserForm from '../components/forms/user-form'
+import PageHeader from '../components/page-header'
 
 const CreateUser = () => {
   const { t } = useTranslation()
   return (
-    <section>
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">{t('users.createUser')}</h1>
+    <section className="mx-auto flex max-w-2xl flex-col gap-6">
+      <PageHeader title={t('users.createUser')} />
       <UserForm />
     </section>
   )

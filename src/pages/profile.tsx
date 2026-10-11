@@ -2,9 +2,11 @@ import { Clock, GraduationCap, Lock, Mail, Phone, User } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Avatar } from '../components/avatar'
+import InfoItem from '../components/info-item'
 import ChangePasswordDialog from '../components/modal/change-password-dialog'
+import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Card, CardContent } from '../components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
 import { Skeleton } from '../components/ui/skeleton'
 import { useAuth } from '../hooks/useAuth'
 import { useGetClassRoomsQuery } from '../store/classRoomsApi'
@@ -17,49 +19,33 @@ const Profile = () => {
   const { data: classRooms = [] } = useGetClassRoomsQuery()
   const [changePasswordOpen, setChangePasswordOpen] = useState(false)
 
-  if (isLoading || !user) return <Skeleton className="h-96 max-w-4xl mx-auto rounded-2xl" />
+  if (isLoading || !user) return <Skeleton className="mx-auto h-80 max-w-3xl rounded-xl" />
 
   const classroom = classRooms.find((c) => c.id === user.classRoomId)
 
-  const fields = [
-    { label: t('pages.profile.info.childName'), value: user.childName, icon: User },
-    { label: t('auth.phone'), value: user.phoneNumber, icon: Phone },
-    { label: t('auth.email'), value: user.email, icon: Mail },
-    { label: t('pages.profile.info.startTime'), value: `${user.startTime ?? '—'} — ${user.endTime ?? '—'}`, icon: Clock },
-    { label: t('pages.profile.info.classroom'), value: classroom?.name ?? t('common.noData'), icon: GraduationCap },
-  ]
-
   return (
-    <section className="max-w-4xl mx-auto">
+    <section className="mx-auto max-w-3xl">
       <Card>
-        <CardContent className="pt-8 space-y-8">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <Avatar name={user.fullName} size="lg" />
-            <div className="text-center sm:text-left">
-              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">{user.fullName}</h2>
-              <p className="text-gray-500 dark:text-gray-400">{t(`users.roles.${user.role}`)}</p>
-            </div>
+        <CardHeader className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+          <Avatar name={user.fullName} size="lg" />
+          <div className="flex min-w-0 flex-col items-center gap-2 sm:items-start">
+            <CardTitle className="text-2xl leading-tight">{user.fullName}</CardTitle>
+            <Badge variant="secondary">{t(`users.roles.${user.role}`)}</Badge>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {fields.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="flex items-center gap-3">
-                <Icon className="h-5 w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-gray-400 dark:text-gray-500">{label}</p>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">{value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-end">
-            <Button onClick={() => setChangePasswordOpen(true)}>
-              <Lock className="h-4 w-4" />
-              {t('auth.changePassword')}
-            </Button>
-          </div>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <InfoItem icon={User} label={t('pages.profile.info.childName')} value={user.childName} />
+          <InfoItem icon={Phone} label={t('auth.phone')} value={user.phoneNumber} />
+          <InfoItem icon={Mail} label={t('auth.email')} value={user.email} />
+          <InfoItem icon={Clock} label={t('pages.profile.info.startTime')} value={`${user.startTime ?? '—'} — ${user.endTime ?? '—'}`} />
+          <InfoItem icon={GraduationCap} label={t('pages.profile.info.classroom')} value={classroom?.name ?? t('common.noData')} />
         </CardContent>
+        <CardFooter className="justify-end border-t">
+          <Button onClick={() => setChangePasswordOpen(true)}>
+            <Lock />
+            {t('auth.changePassword')}
+          </Button>
+        </CardFooter>
       </Card>
 
       <ChangePasswordDialog open={changePasswordOpen || mustChangePassword} onOpenChange={setChangePasswordOpen} required={mustChangePassword} />
